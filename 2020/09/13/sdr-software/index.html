@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>軟體無線電(SDR)入門，軟體篇 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="接續上篇硬體篇，東西都買好後就可以著手設定拉這篇使用作業系統Windows 10，軟體用SDR#，初學用這個也方便 這裡放連結：SDR#(SDRsharp) 下載完後解壓縮到桌面還是哪裡打開資料夾找到install-rtlsdr.bat然後點兩下安裝  接下來注意!如果你用的是win7可以忽略下面操作(關閉驅動強制簽章部分) 關閉驅動強制簽章win10有強制驅動簽章，要先關掉才能裝驅動方法也很簡單">
+<meta property="og:type" content="article">
+<meta property="og:title" content="軟體無線電(SDR)入門，軟體篇">
+<meta property="og:url" content="http://blog.bennyling.cc/2020/09/13/sdr-software/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="接續上篇硬體篇，東西都買好後就可以著手設定拉這篇使用作業系統Windows 10，軟體用SDR#，初學用這個也方便 這裡放連結：SDR#(SDRsharp) 下載完後解壓縮到桌面還是哪裡打開資料夾找到install-rtlsdr.bat然後點兩下安裝  接下來注意!如果你用的是win7可以忽略下面操作(關閉驅動強制簽章部分) 關閉驅動強制簽章win10有強制驅動簽章，要先關掉才能裝驅動方法也很簡單">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://blog.bennyling.cc/2020/09/installrtl-1024x569.png">
+<meta property="og:image" content="https://blog.bennyling.cc/wp-content/uploads/2020/09/porcessed_DSC_0284-1-1024x576.jpg">
+<meta property="og:image" content="https://blog.bennyling.cc/wp-content/uploads/2020/09/porcessed_DSC_0285-1-1024x576.jpg">
+<meta property="og:image" content="https://blog.bennyling.cc/wp-content/uploads/2020/09/porcessed_DSC_0286-1024x576.jpg">
+<meta property="og:image" content="https://blog.bennyling.cc/wp-content/uploads/2020/09/porcessed_DSC_0287-1024x576.jpg">
+<meta property="og:image" content="http://blog.bennyling.cc/2020/09/zadig1-1024x569.png">
+<meta property="og:image" content="http://blog.bennyling.cc/2020/09/zadig2.png">
+<meta property="og:image" content="http://blog.bennyling.cc/2020/09/zadig3.png">
+<meta property="og:image" content="http://blog.bennyling.cc/2020/09/SDRs2.png">
+<meta property="og:image" content="http://blog.bennyling.cc/2020/09/AGC.png">
+<meta property="og:image" content="http://blog.bennyling.cc/2020/09/2020-09-09-NOAA18-1024x772.jpg">
+<meta property="article:published_time" content="2020-09-13T07:39:17.000Z">
+<meta property="article:modified_time" content="2023-04-22T03:28:51.549Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="SDRsharp">
+<meta property="article:tag" content="SDR">
+<meta property="article:tag" content="軟體無線電">
+<meta property="article:tag" content="SDR#">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.bennyling.cc/2020/09/installrtl-1024x569.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.bennyling.cc"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-sdr-software" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/09/13/sdr-software/" class="article-date">
+  <time class="dt-published" datetime="2020-09-13T07:39:17.000Z" itemprop="datePublished">2020-09-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Windows/">Windows</a>►<a class="article-category-link" href="/categories/%E7%84%A1%E7%B7%9A%E9%9B%BB/">無線電</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      軟體無線電(SDR)入門，軟體篇
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>接續上篇硬體篇，東西都買好後就可以著手設定拉<br>這篇使用作業系統Windows 10，軟體用SDR#，初學用這個也方便</p>
+<p>這裡放連結：<br><a target="_blank" rel="noopener" href="https://bit.ly/2ZwQ8U2">SDR#(SDRsharp)</a></p>
+<p>下載完後解壓縮到桌面還是哪裡<br>打開資料夾找到install-rtlsdr.bat<br>然後點兩下安裝</p>
+<p><img src="/2020/09/installrtl-1024x569.png"></p>
+<p>接下來注意!<br>如果你用的是win7可以忽略下面操作(關閉驅動強制簽章部分)</p>
+<h2 id="關閉驅動強制簽章"><a href="#關閉驅動強制簽章" class="headerlink" title="關閉驅動強制簽章"></a>關閉驅動強制簽章</h2><p>win10有強制驅動簽章，要先關掉才能裝驅動<br>方法也很簡單，按著SHIFT不放，然後點重新開機<br>進入重啟選單然後照著下列選項點<br>「疑難排解」-&gt;「進階選項」-&gt;「啟動設定」-&gt;「重新啟動」(這邊會重開電腦)-&gt;鍵盤按數字7<br>下面有圖</p>
+<ul>
+<li><p><img src="https://blog.bennyling.cc/wp-content/uploads/2020/09/porcessed_DSC_0284-1-1024x576.jpg"></p>
+</li>
+<li><p><img src="https://blog.bennyling.cc/wp-content/uploads/2020/09/porcessed_DSC_0285-1-1024x576.jpg"></p>
+</li>
+<li><p><img src="https://blog.bennyling.cc/wp-content/uploads/2020/09/porcessed_DSC_0286-1024x576.jpg"></p>
+</li>
+<li><p><img src="https://blog.bennyling.cc/wp-content/uploads/2020/09/porcessed_DSC_0287-1024x576.jpg"></p>
+</li>
+</ul>
+<h2 id="安裝驅動"><a href="#安裝驅動" class="headerlink" title="安裝驅動"></a>安裝驅動</h2><p>插上電視棒<br>在資料夾下找到並打開zadig.exe</p>
+<p><img src="/2020/09/zadig1-1024x569.png"></p>
+<p>選「options」，把「List All Devices」打勾</p>
+<p><img src="/2020/09/zadig2.png"></p>
+<p>下面長條選單找到「Bulk-In, Interface (Interface 0)」<br>確定一下USB ID 是 0BDA 2838然後按「Replace Driver」<br>過程中可能有警告，按安裝就好</p>
+<p><img src="/2020/09/zadig3.png"></p>
+<h2 id="簡易操作教學"><a href="#簡易操作教學" class="headerlink" title="簡易操作教學"></a>簡易操作教學</h2><p>打開SDRsharp.exe，一個複雜的介面彈了出來</p>
+<p><img src="/2020/09/SDRs2.png"></p>
+<p>紅框：來源選擇<br>綠框：訊號格式<br>籃框：當前頻率</p>
+<p>找到紅色框，找到並選擇「RTL-SDR (USB)」<br>齒輪按一下把「Tuner AGC」打勾後按Close，齒輪旁的播放鍵按下去，就可以開始收聽了</p>
+<p><img src="/2020/09/AGC.png"></p>
+<p>可以先試試看把頻率調到當地電台，訊號格式選WFM</p>
+<h2 id="What’s-next"><a href="#What’s-next" class="headerlink" title="What’s next?"></a>What’s next?</h2><p>SDR可以玩的東西很多的，最直接就是拿去收聽航空&#x2F;業餘波段<br>再者，你也可玩數位解碼，DSD Plus, TETRA了解一下<br>(在這邊提醒一下，不要破解有加密的通訊，會犯法)</p>
+<p>最後，暑假結束了，好不甘心<br>覆蓋一張自己接收到的衛星照結束這回合</p>
+<p><img src="/2020/09/2020-09-09-NOAA18-1024x772.jpg"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.bennyling.cc/2020/09/13/sdr-software/" data-id="clgrfjoaf001dygko9j1qapal" data-title="軟體無線電(SDR)入門，軟體篇" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SDR/" rel="tag">SDR</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SDR/" rel="tag">SDR#</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SDRsharp/" rel="tag">SDRsharp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%BB%9F%E9%AB%94%E7%84%A1%E7%B7%9A%E9%9B%BB/" rel="tag">軟體無線電</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/12/29/proper-functioning-meteor-sdrsharp-plugin/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          proper functioning meteor sdrsharp plugin
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/08/30/sdr-hardware/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">軟體無線電(SDR)入門，硬體篇</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Ubuntu/">Ubuntu</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Windows/">Windows</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/html-css-javascript/">html/css/javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AF%AB%E7%A8%8B%E5%BC%8F%E7%9A%84%E5%BF%83%E5%BE%97/">寫程式的心得</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%88%91%E7%9A%84%E6%AF%94%E7%89%B9%E5%B9%A3%E5%A4%A7%E5%B0%8F%E4%BA%8B/">我的比特幣大小事</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%84%A1%E7%B7%9A%E9%9B%BB/">無線電</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9B%BB%E8%85%A6%E7%A1%AC%E9%AB%94/">電腦硬體</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/2015/" rel="tag">2015</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/2016/" rel="tag">2016</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/4fun-tw/" rel="tag">4fun.tw</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ASUS-Tinker-Board-2S/" rel="tag">ASUS Tinker Board 2S</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CDN/" rel="tag">CDN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CloudFlare/" rel="tag">CloudFlare</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DIY/" rel="tag">DIY</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HD-audio/" rel="tag">HD audio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Live-USB/" rel="tag">Live USB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ltayer/" rel="tag">Ltayer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ltayer-bug-fix/" rel="tag">Ltayer bug fix</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ltayer-%E9%8C%AF%E8%AA%A4%E4%BF%AE%E6%AD%A3/" rel="tag">Ltayer 錯誤修正</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDR/" rel="tag">SDR</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDR/" rel="tag">SDR#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDRsharp/" rel="tag">SDRsharp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UNetbootin/" rel="tag">UNetbootin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/adf-ly/" rel="tag">adf.ly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/allen-disk-1-6/" rel="tag">allen disk 1.6</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apt-get/" rel="tag">apt-get</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash/" rel="tag">bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bit-ly/" rel="tag">bit.ly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bitcoin/" rel="tag">bitcoin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bridgeurl-com/" rel="tag">bridgeurl.com</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fur-ly/" rel="tag">fur.ly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/goo-gl/" rel="tag">goo.gl</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/htc-vive/" rel="tag">htc vive</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/laravel/" rel="tag">laravel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ltayer-for-bug-fix-ver/" rel="tag">ltayer for bug fix ver</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lxrun/" rel="tag">lxrun</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/meteor-plugin/" rel="tag">meteor plugin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orz-tw/" rel="tag">orz.tw</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ppt-cc/" rel="tag">ppt.cc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raspberry-pi/" rel="tag">raspberry pi</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rk3399/" rel="tag">rk3399</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rocketscript/" rel="tag">rocketscript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rootfs/" rel="tag">rootfs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sandbox/" rel="tag">sandbox</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vagrant/" rel="tag">vagrant</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/virtualbox/" rel="tag">virtualbox</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows/" rel="tag">windows</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows-10/" rel="tag">windows 10</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows-10-bash/" rel="tag">windows 10 bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows-10-linux/" rel="tag">windows 10 linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows-1903/" rel="tag">windows 1903</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows-love-linux/" rel="tag">windows love linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%AD%E6%96%87%E5%8C%96/" rel="tag">中文化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BF%AE%E9%9B%BB%E8%85%A6/" rel="tag">修電腦</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%89%B5%E7%AB%99%E5%8D%8A%E5%91%A8%E5%B9%B4/" rel="tag">創站半周年</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8C%96%E7%A4%A6/" rel="tag">挖礦</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AF%94%E7%89%B9%E5%B9%A3/" rel="tag">比特幣</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B2%99%E7%9B%92/" rel="tag">沙盒</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%9F%AD%E7%B6%B2%E5%9D%80/" rel="tag">短網址</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B8%AE%E7%B6%B2%E5%9D%80/" rel="tag">縮網址</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BB%9F%E9%AB%94%E7%84%A1%E7%B7%9A%E9%9B%BB/" rel="tag">軟體無線電</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%89%E5%9D%80/" rel="tag">轉址</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9F%B3%E6%95%88/" rel="tag">音效</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/2015/" style="font-size: 10px;">2015</a> <a href="/tags/2016/" style="font-size: 10px;">2016</a> <a href="/tags/4fun-tw/" style="font-size: 10px;">4fun.tw</a> <a href="/tags/ASUS-Tinker-Board-2S/" style="font-size: 10px;">ASUS Tinker Board 2S</a> <a href="/tags/CDN/" style="font-size: 10px;">CDN</a> <a href="/tags/CloudFlare/" style="font-size: 13.33px;">CloudFlare</a> <a href="/tags/DIY/" style="font-size: 10px;">DIY</a> <a href="/tags/HD-audio/" style="font-size: 10px;">HD audio</a> <a href="/tags/Live-USB/" style="font-size: 13.33px;">Live USB</a> <a href="/tags/Ltayer/" style="font-size: 10px;">Ltayer</a> <a href="/tags/Ltayer-bug-fix/" style="font-size: 10px;">Ltayer bug fix</a> <a href="/tags/Ltayer-%E9%8C%AF%E8%AA%A4%E4%BF%AE%E6%AD%A3/" style="font-size: 10px;">Ltayer 錯誤修正</a> <a href="/tags/SDR/" style="font-size: 13.33px;">SDR</a> <a href="/tags/SDR/" style="font-size: 10px;">SDR#</a> <a href="/tags/SDRsharp/" style="font-size: 13.33px;">SDRsharp</a> <a href="/tags/UNetbootin/" style="font-size: 13.33px;">UNetbootin</a> <a href="/tags/Ubuntu/" style="font-size: 20px;">Ubuntu</a> <a href="/tags/adf-ly/" style="font-size: 10px;">adf.ly</a> <a href="/tags/allen-disk-1-6/" style="font-size: 10px;">allen disk 1.6</a> <a href="/tags/apt-get/" style="font-size: 10px;">apt-get</a> <a href="/tags/bash/" style="font-size: 10px;">bash</a> <a href="/tags/bit-ly/" style="font-size: 10px;">bit.ly</a> <a href="/tags/bitcoin/" style="font-size: 10px;">bitcoin</a> <a href="/tags/bridgeurl-com/" style="font-size: 10px;">bridgeurl.com</a> <a href="/tags/fur-ly/" style="font-size: 10px;">fur.ly</a> <a href="/tags/goo-gl/" style="font-size: 10px;">goo.gl</a> <a href="/tags/htc-vive/" style="font-size: 10px;">htc vive</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/kernel/" style="font-size: 10px;">kernel</a> <a href="/tags/laravel/" style="font-size: 10px;">laravel</a> <a href="/tags/linux/" style="font-size: 13.33px;">linux</a> <a href="/tags/ltayer-for-bug-fix-ver/" style="font-size: 10px;">ltayer for bug fix ver</a> <a href="/tags/lxrun/" style="font-size: 10px;">lxrun</a> <a href="/tags/meteor-plugin/" style="font-size: 10px;">meteor plugin</a> <a href="/tags/orz-tw/" style="font-size: 10px;">orz.tw</a> <a href="/tags/ppt-cc/" style="font-size: 10px;">ppt.cc</a> <a href="/tags/raspberry-pi/" style="font-size: 10px;">raspberry pi</a> <a href="/tags/rk3399/" style="font-size: 10px;">rk3399</a> <a href="/tags/rocketscript/" style="font-size: 10px;">rocketscript</a> <a href="/tags/rootfs/" style="font-size: 10px;">rootfs</a> <a href="/tags/sandbox/" style="font-size: 10px;">sandbox</a> <a href="/tags/vagrant/" style="font-size: 10px;">vagrant</a> <a href="/tags/virtualbox/" style="font-size: 10px;">virtualbox</a> <a href="/tags/windows/" style="font-size: 16.67px;">windows</a> <a href="/tags/windows-10/" style="font-size: 13.33px;">windows 10</a> <a href="/tags/windows-10-bash/" style="font-size: 16.67px;">windows 10 bash</a> <a href="/tags/windows-10-linux/" style="font-size: 13.33px;">windows 10 linux</a> <a href="/tags/windows-1903/" style="font-size: 10px;">windows 1903</a> <a href="/tags/windows-love-linux/" style="font-size: 10px;">windows love linux</a> <a href="/tags/%E4%B8%AD%E6%96%87%E5%8C%96/" style="font-size: 10px;">中文化</a> <a href="/tags/%E4%BF%AE%E9%9B%BB%E8%85%A6/" style="font-size: 10px;">修電腦</a> <a href="/tags/%E5%89%B5%E7%AB%99%E5%8D%8A%E5%91%A8%E5%B9%B4/" style="font-size: 10px;">創站半周年</a> <a href="/tags/%E6%8C%96%E7%A4%A6/" style="font-size: 10px;">挖礦</a> <a href="/tags/%E6%AF%94%E7%89%B9%E5%B9%A3/" style="font-size: 10px;">比特幣</a> <a href="/tags/%E6%B2%99%E7%9B%92/" style="font-size: 10px;">沙盒</a> <a href="/tags/%E7%9F%AD%E7%B6%B2%E5%9D%80/" style="font-size: 13.33px;">短網址</a> <a href="/tags/%E7%B8%AE%E7%B6%B2%E5%9D%80/" style="font-size: 13.33px;">縮網址</a> <a href="/tags/%E8%BB%9F%E9%AB%94%E7%84%A1%E7%B7%9A%E9%9B%BB/" style="font-size: 13.33px;">軟體無線電</a> <a href="/tags/%E8%BD%89%E5%9D%80/" style="font-size: 13.33px;">轉址</a> <a href="/tags/%E9%9F%B3%E6%95%88/" style="font-size: 10px;">音效</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">April 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">October 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">December 2013</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/04/22/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/12/asus-tinker-board-2s-ubuntu-server-22-04-for-raspi/">ASUS Tinker Board 2S 上 ubuntu server 22.04(for raspi)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/12/29/proper-functioning-meteor-sdrsharp-plugin/">proper functioning meteor sdrsharp plugin</a>
+          </li>
+        
+          <li>
+            <a href="/2020/09/13/sdr-software/">軟體無線電(SDR)入門，軟體篇</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/30/sdr-hardware/">軟體無線電(SDR)入門，硬體篇</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

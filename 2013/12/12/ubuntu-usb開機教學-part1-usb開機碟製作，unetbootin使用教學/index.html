@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Ubuntu-USB開機教學-Part1-USB開機碟製作，UNetbootin使用教學 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="大家好，今天是一個重要的日子 是什麼日子呢? 就是……就是……就(講到一半就被巴) 好痛…就是我第一次寫部落格啦 第一次就寫教學文，好像有點自大ㄝ… 不管了，直接進入正題 今天要教的是 Ubuntu USB開機碟的製作 先準備好一支隨身碟(本人使用的是USB2.0的創見8G隨身碟，不過建議大家使用USB3.0容量大於8G的隨身碟來開機，不然，用它來開機時，速度會讓你想…) 向大家介紹一款神器UNe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu-USB開機教學-Part1-USB開機碟製作，UNetbootin使用教學">
+<meta property="og:url" content="http://blog.bennyling.cc/2013/12/12/ubuntu-usb%E9%96%8B%E6%A9%9F%E6%95%99%E5%AD%B8-part1-usb%E9%96%8B%E6%A9%9F%E7%A2%9F%E8%A3%BD%E4%BD%9C%EF%BC%8Cunetbootin%E4%BD%BF%E7%94%A8%E6%95%99%E5%AD%B8/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="大家好，今天是一個重要的日子 是什麼日子呢? 就是……就是……就(講到一半就被巴) 好痛…就是我第一次寫部落格啦 第一次就寫教學文，好像有點自大ㄝ… 不管了，直接進入正題 今天要教的是 Ubuntu USB開機碟的製作 先準備好一支隨身碟(本人使用的是USB2.0的創見8G隨身碟，不過建議大家使用USB3.0容量大於8G的隨身碟來開機，不然，用它來開機時，速度會讓你想…) 向大家介紹一款神器UNe">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://farm6.staticflickr.com/5474/11350942734_30f758f0d2_b.jpg">
+<meta property="og:image" content="https://farm4.staticflickr.com/3702/11350942064_c84da65eb4_b.jpg">
+<meta property="og:image" content="https://farm3.staticflickr.com/2851/11350994433_f528b728b1_o.jpg">
+<meta property="og:image" content="https://farm8.staticflickr.com/7429/11350837665_0bf6f9b1eb_o.jpg">
+<meta property="og:image" content="https://farm4.staticflickr.com/3831/11350903226_6b56b86351_o.jpg">
+<meta property="article:published_time" content="2013-12-12T04:56:31.000Z">
+<meta property="article:modified_time" content="2023-04-22T03:28:49.919Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Ubuntu">
+<meta property="article:tag" content="Live USB">
+<meta property="article:tag" content="UNetbootin">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://farm6.staticflickr.com/5474/11350942734_30f758f0d2_b.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.bennyling.cc"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-ubuntu-usb開機教學-part1-usb開機碟製作，unetbootin使用教學" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2013/12/12/ubuntu-usb%E9%96%8B%E6%A9%9F%E6%95%99%E5%AD%B8-part1-usb%E9%96%8B%E6%A9%9F%E7%A2%9F%E8%A3%BD%E4%BD%9C%EF%BC%8Cunetbootin%E4%BD%BF%E7%94%A8%E6%95%99%E5%AD%B8/" class="article-date">
+  <time class="dt-published" datetime="2013-12-12T04:56:31.000Z" itemprop="datePublished">2013-12-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Ubuntu/">Ubuntu</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Ubuntu-USB開機教學-Part1-USB開機碟製作，UNetbootin使用教學
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>大家好，今天是一個重要的日子</p>
+<p>是什麼日子呢?</p>
+<p>就是……就是……就(講到一半就被巴)</p>
+<p>好痛…就是我第一次寫部落格啦</p>
+<p>第一次就寫教學文，好像有點自大ㄝ…</p>
+<p>不管了，直接進入正題</p>
+<p>今天要教的是 Ubuntu USB開機碟的製作</p>
+<p>先準備好一支隨身碟(本人使用的是USB2.0的創見8G隨身碟，不過建議大家使用USB3.0容量大於8G的隨身碟來開機，不然，用它來開機時，速度會讓你想…)</p>
+<p>向大家介紹一款神器UNetbootin</p>
+<p><a target="_blank" rel="noopener" href="https://www.flickr.com/photos/107928128@N03/11350942734"><img src="https://farm6.staticflickr.com/5474/11350942734_30f758f0d2_b.jpg" alt="ub6-e"></a></p>
+<p>你問我這東西是啥?這東西可神了，它提供一個介面化USB開機碟的製作介面</p>
+<p>要製作USB開機碟就靠他啦，先把它下載下來吧，點一下紅框選起來的第一個(for Windows)的圖片  <a target="_blank" rel="noopener" href="https://unetbootin.sourceforge.net/">有請神奇傳送門</a></p>
+<p>接下來的這個動作可做也可不做</p>
+<p><a target="_blank" rel="noopener" href="https://www.flickr.com/photos/107928128@N03/11350942064"><img src="https://farm4.staticflickr.com/3702/11350942064_c84da65eb4_b.jpg" alt="ub2-e"></a></p>
+<p><a target="_blank" rel="noopener" href="https://www.ubuntu-tw.org/modules/tinyd0/">上圖網址傳送門(台灣論壇)</a>    <a target="_blank" rel="noopener" href="https://www.ubuntu.com/">Ubuntu原文官方網站</a></p>
+<p>接下來是圖文解說:</p>
+<p>1 是它的發行板，預設選項是桌面版本，USB開機碟也是用這版本。</p>
+<p>2 是版本號，本人在此用的是13.04來解說，不過台灣論壇提供的是最新版本(上)和長期支援的版本(下)。</p>
+<p>3 是電腦架構，本人在此沒有做太深入的研究，總之，選擇你要用USB開機碟開機的電腦位元就好了。</p>
+<p>4 是下載選項，直接按[開始下載]等一下就開始下載了，如果需要用BT種子下載的就把上述選項打勾再按[開始下載]。</p>
+<p>一切都準備好了嗎?那我們就開始吧!</p>
+<p><a target="_blank" rel="noopener" href="https://www.flickr.com/photos/107928128@N03/11350994433"><img src="https://farm3.staticflickr.com/2851/11350994433_f528b728b1_o.jpg" alt="ub1-e"></a></p>
+<p>1 是你要安裝在USB中的作業系統，右邊是版本號。(如果沒有去下載ISO檔的要選擇這裡)</p>
+<p>2 是簡介區，如果 1 沒有選任何東西的話，會顯示UNetbootin的簡介。</p>
+<p>3 是直接透過上個步驟下載下來的ISO檔來安裝在USB中。</p>
+<p>4 是假如說你用USB來開機時儲存檔案時在USB的作業系統裡，但USB Live僅僅只是暫時存在USB裡，等到關機時它就會把資料刪除了，這時就需要設定它了，但注意這只對Ubuntu有用而已，還有請計算排除Ubuntu的檔案大小(約為0.79GB&#x3D;808.96MB)還剩下多少空間可用，建議留一些空間，不要配置的剛剛好。</p>
+<p>5 是設定你要安裝在哪一支隨身碟裡的，當所有東西都設定好了之後，就按下[確定]吧!</p>
+<p><a target="_blank" rel="noopener" href="https://www.flickr.com/photos/107928128@N03/11350837665"><img src="https://farm8.staticflickr.com/7429/11350837665_0bf6f9b1eb_o.jpg" alt="ub4"></a></p>
+<p>這時就開始把Ubuntu安裝到你的隨身碟中了，請注意這時可能會沒有回應，但也不要關閉它，它還沒有當掉</p>
+<p> <a target="_blank" rel="noopener" href="https://www.flickr.com/photos/107928128@N03/11350903226"><img src="https://farm4.staticflickr.com/3831/11350903226_6b56b86351_o.jpg" alt="ub5"></a> </p>
+<p>當出現這個畫面時，代表恭喜你了，你已經做好了一支USB開機碟了，你可以用USB來開機了。</p>
+<p>最後，告訴大家一件很可怕的事…</p>
+<p>那就是，不管你從哪裡的到的Ubuntu的ISO檔(如台灣論壇、原文官方)以及用UNetbootin直接下載來製作的USB開機碟，用它來開機時都會是英文(我英文很爛，好可怕啊…XDD)</p>
+<p>所以，下一節，我要來教大家用今天製作的USB開機碟來開機，以及，盡可能地把它給中文化。敬請期待<a href="https://blog.bennyling.cc/8/">Ubuntu-USB開機教學-Part2-USB開機教學and中文化Ubuntu</a></p>
+<p>註:使用USB開機時，你存在USB中的資料在非USB開機模式時打開隨身碟，只會看到Ubuntu的系統檔案，並不會看到你的檔案，同道理，在非USB開機模式所存在USB的檔案，在USB開機模式時也看不到，請注意。</p>
+<p>嚴重聲明:轉發須註明出處，否則一律視同盜文，作者有法律追溯權。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.bennyling.cc/2013/12/12/ubuntu-usb%E9%96%8B%E6%A9%9F%E6%95%99%E5%AD%B8-part1-usb%E9%96%8B%E6%A9%9F%E7%A2%9F%E8%A3%BD%E4%BD%9C%EF%BC%8Cunetbootin%E4%BD%BF%E7%94%A8%E6%95%99%E5%AD%B8/" data-id="clgrfjoae0019ygkoc6xv9w49" data-title="Ubuntu-USB開機教學-Part1-USB開機碟製作，UNetbootin使用教學" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Live-USB/" rel="tag">Live USB</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/UNetbootin/" rel="tag">UNetbootin</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2013/12/26/ubuntu-usb%E9%96%8B%E6%A9%9F%E6%95%99%E5%AD%B8-part2-usb%E9%96%8B%E6%A9%9F%E6%95%99%E5%AD%B8and%E4%B8%AD%E6%96%87%E5%8C%96ubuntu/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Ubuntu-USB開機教學-Part2-USB開機教學and中文化Ubuntu
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Ubuntu/">Ubuntu</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Windows/">Windows</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/html-css-javascript/">html/css/javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AF%AB%E7%A8%8B%E5%BC%8F%E7%9A%84%E5%BF%83%E5%BE%97/">寫程式的心得</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%88%91%E7%9A%84%E6%AF%94%E7%89%B9%E5%B9%A3%E5%A4%A7%E5%B0%8F%E4%BA%8B/">我的比特幣大小事</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%84%A1%E7%B7%9A%E9%9B%BB/">無線電</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9B%BB%E8%85%A6%E7%A1%AC%E9%AB%94/">電腦硬體</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/2015/" rel="tag">2015</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/2016/" rel="tag">2016</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/4fun-tw/" rel="tag">4fun.tw</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ASUS-Tinker-Board-2S/" rel="tag">ASUS Tinker Board 2S</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CDN/" rel="tag">CDN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CloudFlare/" rel="tag">CloudFlare</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DIY/" rel="tag">DIY</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HD-audio/" rel="tag">HD audio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Live-USB/" rel="tag">Live USB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ltayer/" rel="tag">Ltayer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ltayer-bug-fix/" rel="tag">Ltayer bug fix</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ltayer-%E9%8C%AF%E8%AA%A4%E4%BF%AE%E6%AD%A3/" rel="tag">Ltayer 錯誤修正</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDR/" rel="tag">SDR</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDR/" rel="tag">SDR#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDRsharp/" rel="tag">SDRsharp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UNetbootin/" rel="tag">UNetbootin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/adf-ly/" rel="tag">adf.ly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/allen-disk-1-6/" rel="tag">allen disk 1.6</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apt-get/" rel="tag">apt-get</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash/" rel="tag">bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bit-ly/" rel="tag">bit.ly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bitcoin/" rel="tag">bitcoin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bridgeurl-com/" rel="tag">bridgeurl.com</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fur-ly/" rel="tag">fur.ly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/goo-gl/" rel="tag">goo.gl</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/htc-vive/" rel="tag">htc vive</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/laravel/" rel="tag">laravel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ltayer-for-bug-fix-ver/" rel="tag">ltayer for bug fix ver</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lxrun/" rel="tag">lxrun</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/meteor-plugin/" rel="tag">meteor plugin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orz-tw/" rel="tag">orz.tw</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ppt-cc/" rel="tag">ppt.cc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raspberry-pi/" rel="tag">raspberry pi</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rk3399/" rel="tag">rk3399</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rocketscript/" rel="tag">rocketscript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rootfs/" rel="tag">rootfs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sandbox/" rel="tag">sandbox</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vagrant/" rel="tag">vagrant</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/virtualbox/" rel="tag">virtualbox</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows/" rel="tag">windows</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows-10/" rel="tag">windows 10</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows-10-bash/" rel="tag">windows 10 bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows-10-linux/" rel="tag">windows 10 linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows-1903/" rel="tag">windows 1903</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows-love-linux/" rel="tag">windows love linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%AD%E6%96%87%E5%8C%96/" rel="tag">中文化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BF%AE%E9%9B%BB%E8%85%A6/" rel="tag">修電腦</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%89%B5%E7%AB%99%E5%8D%8A%E5%91%A8%E5%B9%B4/" rel="tag">創站半周年</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8C%96%E7%A4%A6/" rel="tag">挖礦</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AF%94%E7%89%B9%E5%B9%A3/" rel="tag">比特幣</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B2%99%E7%9B%92/" rel="tag">沙盒</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%9F%AD%E7%B6%B2%E5%9D%80/" rel="tag">短網址</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B8%AE%E7%B6%B2%E5%9D%80/" rel="tag">縮網址</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BB%9F%E9%AB%94%E7%84%A1%E7%B7%9A%E9%9B%BB/" rel="tag">軟體無線電</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%89%E5%9D%80/" rel="tag">轉址</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9F%B3%E6%95%88/" rel="tag">音效</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/2015/" style="font-size: 10px;">2015</a> <a href="/tags/2016/" style="font-size: 10px;">2016</a> <a href="/tags/4fun-tw/" style="font-size: 10px;">4fun.tw</a> <a href="/tags/ASUS-Tinker-Board-2S/" style="font-size: 10px;">ASUS Tinker Board 2S</a> <a href="/tags/CDN/" style="font-size: 10px;">CDN</a> <a href="/tags/CloudFlare/" style="font-size: 13.33px;">CloudFlare</a> <a href="/tags/DIY/" style="font-size: 10px;">DIY</a> <a href="/tags/HD-audio/" style="font-size: 10px;">HD audio</a> <a href="/tags/Live-USB/" style="font-size: 13.33px;">Live USB</a> <a href="/tags/Ltayer/" style="font-size: 10px;">Ltayer</a> <a href="/tags/Ltayer-bug-fix/" style="font-size: 10px;">Ltayer bug fix</a> <a href="/tags/Ltayer-%E9%8C%AF%E8%AA%A4%E4%BF%AE%E6%AD%A3/" style="font-size: 10px;">Ltayer 錯誤修正</a> <a href="/tags/SDR/" style="font-size: 13.33px;">SDR</a> <a href="/tags/SDR/" style="font-size: 10px;">SDR#</a> <a href="/tags/SDRsharp/" style="font-size: 13.33px;">SDRsharp</a> <a href="/tags/UNetbootin/" style="font-size: 13.33px;">UNetbootin</a> <a href="/tags/Ubuntu/" style="font-size: 20px;">Ubuntu</a> <a href="/tags/adf-ly/" style="font-size: 10px;">adf.ly</a> <a href="/tags/allen-disk-1-6/" style="font-size: 10px;">allen disk 1.6</a> <a href="/tags/apt-get/" style="font-size: 10px;">apt-get</a> <a href="/tags/bash/" style="font-size: 10px;">bash</a> <a href="/tags/bit-ly/" style="font-size: 10px;">bit.ly</a> <a href="/tags/bitcoin/" style="font-size: 10px;">bitcoin</a> <a href="/tags/bridgeurl-com/" style="font-size: 10px;">bridgeurl.com</a> <a href="/tags/fur-ly/" style="font-size: 10px;">fur.ly</a> <a href="/tags/goo-gl/" style="font-size: 10px;">goo.gl</a> <a href="/tags/htc-vive/" style="font-size: 10px;">htc vive</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/kernel/" style="font-size: 10px;">kernel</a> <a href="/tags/laravel/" style="font-size: 10px;">laravel</a> <a href="/tags/linux/" style="font-size: 13.33px;">linux</a> <a href="/tags/ltayer-for-bug-fix-ver/" style="font-size: 10px;">ltayer for bug fix ver</a> <a href="/tags/lxrun/" style="font-size: 10px;">lxrun</a> <a href="/tags/meteor-plugin/" style="font-size: 10px;">meteor plugin</a> <a href="/tags/orz-tw/" style="font-size: 10px;">orz.tw</a> <a href="/tags/ppt-cc/" style="font-size: 10px;">ppt.cc</a> <a href="/tags/raspberry-pi/" style="font-size: 10px;">raspberry pi</a> <a href="/tags/rk3399/" style="font-size: 10px;">rk3399</a> <a href="/tags/rocketscript/" style="font-size: 10px;">rocketscript</a> <a href="/tags/rootfs/" style="font-size: 10px;">rootfs</a> <a href="/tags/sandbox/" style="font-size: 10px;">sandbox</a> <a href="/tags/vagrant/" style="font-size: 10px;">vagrant</a> <a href="/tags/virtualbox/" style="font-size: 10px;">virtualbox</a> <a href="/tags/windows/" style="font-size: 16.67px;">windows</a> <a href="/tags/windows-10/" style="font-size: 13.33px;">windows 10</a> <a href="/tags/windows-10-bash/" style="font-size: 16.67px;">windows 10 bash</a> <a href="/tags/windows-10-linux/" style="font-size: 13.33px;">windows 10 linux</a> <a href="/tags/windows-1903/" style="font-size: 10px;">windows 1903</a> <a href="/tags/windows-love-linux/" style="font-size: 10px;">windows love linux</a> <a href="/tags/%E4%B8%AD%E6%96%87%E5%8C%96/" style="font-size: 10px;">中文化</a> <a href="/tags/%E4%BF%AE%E9%9B%BB%E8%85%A6/" style="font-size: 10px;">修電腦</a> <a href="/tags/%E5%89%B5%E7%AB%99%E5%8D%8A%E5%91%A8%E5%B9%B4/" style="font-size: 10px;">創站半周年</a> <a href="/tags/%E6%8C%96%E7%A4%A6/" style="font-size: 10px;">挖礦</a> <a href="/tags/%E6%AF%94%E7%89%B9%E5%B9%A3/" style="font-size: 10px;">比特幣</a> <a href="/tags/%E6%B2%99%E7%9B%92/" style="font-size: 10px;">沙盒</a> <a href="/tags/%E7%9F%AD%E7%B6%B2%E5%9D%80/" style="font-size: 13.33px;">短網址</a> <a href="/tags/%E7%B8%AE%E7%B6%B2%E5%9D%80/" style="font-size: 13.33px;">縮網址</a> <a href="/tags/%E8%BB%9F%E9%AB%94%E7%84%A1%E7%B7%9A%E9%9B%BB/" style="font-size: 13.33px;">軟體無線電</a> <a href="/tags/%E8%BD%89%E5%9D%80/" style="font-size: 13.33px;">轉址</a> <a href="/tags/%E9%9F%B3%E6%95%88/" style="font-size: 10px;">音效</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">April 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">October 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">December 2013</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/04/22/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2022/06/12/asus-tinker-board-2s-ubuntu-server-22-04-for-raspi/">ASUS Tinker Board 2S 上 ubuntu server 22.04(for raspi)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/12/29/proper-functioning-meteor-sdrsharp-plugin/">proper functioning meteor sdrsharp plugin</a>
+          </li>
+        
+          <li>
+            <a href="/2020/09/13/sdr-software/">軟體無線電(SDR)入門，軟體篇</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/30/sdr-hardware/">軟體無線電(SDR)入門，硬體篇</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
