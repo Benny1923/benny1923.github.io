@@ -66,7 +66,7 @@
     </header>
     <div class="e-content entry" itemprop="articleBody">
       
-        <p>最近在幫工作室製作新網頁和伺服器歲修(弄丟了張SD卡，超傷心，我的資料啊)及其他的雜事，都沒麼時間在這blog上面，在此先致上87分的歉意，不能再高了(眾:打他<br>不鬧了，進入正文吧 HSTS簡介:HSTS全名是HTTP Strict Transport Security 中文名「強制安全傳輸技術」，原理是在第一次訪問https網站時，網站的回覆表頭帶有「Strict-Transport-Security」，該表頭會讓瀏覽器記得，該網站(正確說法是域名)有提供HTTPS安全連線，並於下次連線中強制使用HTTPS，注意是強制喔，不論是點進不帶有https的連結(例如:<a target="_blank" rel="noopener" href="http://blog.bennyling.cc/362/">這個</a>)，或是你故意在網址列打入網址時使用http:&#x2F;&#x2F;為開頭，瀏覽器都會先強制轉換成https再送出請求<br>當然這些規則是建立在「該瀏覽器曾經訪問過該網站(域名)，並在https網頁中留下「Strict-Transport-Security」這個表頭，並且再次訪問該網站的間隔時間必在「Strict-Transport-Security」中的「max-age&#x3D;時間」的有效值內(單位是秒數，多數人設定是兩年也就是「max-age&#x3D;31536000」)才會被瀏覽器強制轉換成https。啊啊啊我不會解釋拉，去看維基百科解釋或許會比較好，<a target="_blank" rel="noopener" href="http://bit.ly/1ZcSnmQ">傳送門按我</a>(謎之聲:你不早點貼，害我看了堆廢話<br>那麼問題來了!Benny在自己的網站設定了https和HSTS(max-age是兩年)後用chrome訪問了自己的網站，但又反悔把https關掉，再使用chrome訪問自己的網站(一切都發生在2小時內)，請問:</p>
+        <p>最近在幫工作室製作新網頁和伺服器歲修(弄丟了張SD卡，超傷心，我的資料啊)及其他的雜事，都沒麼時間在這blog上面，在此先致上87分的歉意，不能再高了(眾:打他<br>不鬧了，進入正文吧 HSTS簡介:HSTS全名是HTTP Strict Transport Security 中文名「強制安全傳輸技術」，原理是在第一次訪問https網站時，網站的回覆表頭帶有「Strict-Transport-Security」，該表頭會讓瀏覽器記得，該網站(正確說法是域名)有提供HTTPS安全連線，並於下次連線中強制使用HTTPS，注意是強制喔，不論是點進不帶有https的連結(例如:<a href="http://blog.bennyling.cc/362/">這個</a>)，或是你故意在網址列打入網址時使用http:&#x2F;&#x2F;為開頭，瀏覽器都會先強制轉換成https再送出請求<br>當然這些規則是建立在「該瀏覽器曾經訪問過該網站(域名)，並在https網頁中留下「Strict-Transport-Security」這個表頭，並且再次訪問該網站的間隔時間必在「Strict-Transport-Security」中的「max-age&#x3D;時間」的有效值內(單位是秒數，多數人設定是兩年也就是「max-age&#x3D;31536000」)才會被瀏覽器強制轉換成https。啊啊啊我不會解釋拉，去看維基百科解釋或許會比較好，<a target="_blank" rel="noopener" href="http://bit.ly/1ZcSnmQ">傳送門按我</a>(謎之聲:你不早點貼，害我看了堆廢話<br>那麼問題來了!Benny在自己的網站設定了https和HSTS(max-age是兩年)後用chrome訪問了自己的網站，但又反悔把https關掉，再使用chrome訪問自己的網站(一切都發生在2小時內)，請問:</p>
 <p>會發生什麼事呢?<br>答案:Benny的chrome會因為HSTS設定，在瀏覽自己網站時，強制被轉換成https，但又因為該網站已經不再提供https連線進而連線失敗<br>那怎麼辦呢?<br>當然我今天是來說解決方法的，解決的方法就是:<br><del>等兩年後HSTS失效再訪問網站</del><br>手動(強制)讓HSTS失效，當然這就是本篇的主題<br>流程:<br>首先在Google Chrome的網址列輸入 chrome:&#x2F;&#x2F;net-internals&#x2F;#hsts<br>接下來按Enter<br>你就會看到以下的畫面:<br><a href="/2016/06/setting.png"><img src="/2016/06/setting.png" alt="setting"></a></p>
 <p>在Delete domain區域中的文字格輸入你要清除HSTS設定的域名(1)，然後按「Delete」(2)<br><a href="/2016/06/step1.png"><img src="/2016/06/step1.png" alt="step1"></a><br>按完之後，啥事都不會發生，所以要確認下有沒有成功刪除HSTS</p>
 <p>在下方Query domain的區域中的文字格輸入你剛剛刪除的域名，然後按「Query」<br><a href="/2016/06/query.png"><img src="/2016/06/query.png" alt="query"></a></p>
@@ -105,14 +105,6 @@
 
 </div></div>
     <aside id="sidebar" class="alignright">
-  <div class="search">
-  <form action="//google.com/search" method="get" accept-charset="utf-8">
-    <input type="search" name="q" results="0" placeholder="Search">
-    <input type="hidden" name="as_sitesearch" value="preview-blog.bennyling.cc">
-  </form>
-</div>
-
-
   
 <div class="widget tag">
   <h3 class="title">Categories</h3>
@@ -231,6 +223,7 @@
   
   &copy; 2013-2023 Benny Ling
   
+  Powered by Hexo. Licensed under CC BY-NC-SA 3.0
 </div>
 <div class="clearfix"></div></footer>
   
