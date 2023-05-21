@@ -1,0 +1,276 @@
+<!DOCTYPE HTML>
+<html lang="zh-tw">
+<head>
+  <meta charset="utf-8">
+  
+  <title>手動清除Google Chrome的HSTS設定 | Benny 隨手記</title>
+  <meta name="author" content="Benny Ling">
+  
+  <meta name="description" content="最近在幫工作室製作新網頁和伺服器歲修(弄丟了張SD卡，超傷心，我的資料啊)及其他的雜事，都沒麼時間在這blog上面，在此先致上87分的歉意，不能再高了(眾:打他不鬧了，進入正文吧 HSTS簡介:HSTS全名是HTTP Strict Transport Security 中文名「強制安全傳輸技術」，原">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="手動清除Google Chrome的HSTS設定"/>
+  <meta property="og:site_name" content="Benny 隨手記"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link rel="shortcut icon" href="/favicon.png">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+  
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Benny 隨手記</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/about">About</a></li>
+    
+      <li><a href="/links">Links</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article id="post-clear-google-chrome-hsts-setting" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2016-06-01T14:47:45.000Z"><a href="/2016/06/01/clear-google-chrome-hsts-setting/">2016-06-01</a></time>
+      
+      
+  
+    <h1 class="p-name title" itemprop="headline name">手動清除Google Chrome的HSTS設定</h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>最近在幫工作室製作新網頁和伺服器歲修(弄丟了張SD卡，超傷心，我的資料啊)及其他的雜事，都沒麼時間在這blog上面，在此先致上87分的歉意，不能再高了(眾:打他<br>不鬧了，進入正文吧 HSTS簡介:HSTS全名是HTTP Strict Transport Security 中文名「強制安全傳輸技術」，原理是在第一次訪問https網站時，網站的回覆表頭帶有「Strict-Transport-Security」，該表頭會讓瀏覽器記得，該網站(正確說法是域名)有提供HTTPS安全連線，並於下次連線中強制使用HTTPS，注意是強制喔，不論是點進不帶有https的連結(例如:<a target="_blank" rel="noopener" href="http://blog.bennyling.cc/362/">這個</a>)，或是你故意在網址列打入網址時使用http:&#x2F;&#x2F;為開頭，瀏覽器都會先強制轉換成https再送出請求<br>當然這些規則是建立在「該瀏覽器曾經訪問過該網站(域名)，並在https網頁中留下「Strict-Transport-Security」這個表頭，並且再次訪問該網站的間隔時間必在「Strict-Transport-Security」中的「max-age&#x3D;時間」的有效值內(單位是秒數，多數人設定是兩年也就是「max-age&#x3D;31536000」)才會被瀏覽器強制轉換成https。啊啊啊我不會解釋拉，去看維基百科解釋或許會比較好，<a target="_blank" rel="noopener" href="http://bit.ly/1ZcSnmQ">傳送門按我</a>(謎之聲:你不早點貼，害我看了堆廢話<br>那麼問題來了!Benny在自己的網站設定了https和HSTS(max-age是兩年)後用chrome訪問了自己的網站，但又反悔把https關掉，再使用chrome訪問自己的網站(一切都發生在2小時內)，請問:</p>
+<p>會發生什麼事呢?<br>答案:Benny的chrome會因為HSTS設定，在瀏覽自己網站時，強制被轉換成https，但又因為該網站已經不再提供https連線進而連線失敗<br>那怎麼辦呢?<br>當然我今天是來說解決方法的，解決的方法就是:<br><del>等兩年後HSTS失效再訪問網站</del><br>手動(強制)讓HSTS失效，當然這就是本篇的主題<br>流程:<br>首先在Google Chrome的網址列輸入 chrome:&#x2F;&#x2F;net-internals&#x2F;#hsts<br>接下來按Enter<br>你就會看到以下的畫面:<br><a href="/2016/06/setting.png"><img src="/2016/06/setting.png" alt="setting"></a></p>
+<p>在Delete domain區域中的文字格輸入你要清除HSTS設定的域名(1)，然後按「Delete」(2)<br><a href="/2016/06/step1.png"><img src="/2016/06/step1.png" alt="step1"></a><br>按完之後，啥事都不會發生，所以要確認下有沒有成功刪除HSTS</p>
+<p>在下方Query domain的區域中的文字格輸入你剛剛刪除的域名，然後按「Query」<br><a href="/2016/06/query.png"><img src="/2016/06/query.png" alt="query"></a></p>
+<p>成功刪除的話應該會像下圖情況，下方出現Not found的提示<br><a href="/2016/06/ok.png"><img src="/2016/06/ok.png" alt="ok"></a></p>
+<p>失敗的話如下圖，瀏覽器會回報關於該域名HSTS的資訊<br><a href="/2016/06/found.png"><img src="/2016/06/found.png" alt="found"></a></p>
+<p>個人小註解時間:<br>在刪除子域名的HSTS的時候，建議把根域名也輸入，例如:要刪除 blog.bxstudio.cc，就要把bxstudio.cc 和 blog.bxstudio.cc 分別給Delete domain來刪除，原因是什麼，本人目前還不清楚，有空再研究吧<br>還有啊，我發現Vivaldi也可以用這方法清除<br>其他瀏覽器如firefox和opera….清除HSTS的方法還在研究，等哪天知道再更新吧</p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/%E5%85%B6%E4%BB%96/">其他</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/Chrome/">Chrome</a>, <a href="/tags/Google-Chrome/">Google Chrome</a>, <a href="/tags/HSTS/">HSTS</a>, <a href="/tags/Vivaldi/">Vivaldi</a>, <a href="/tags/%E6%B8%85%E9%99%A4HSTS/">清除HSTS</a>
+  </div>
+
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">Comments</h1>
+
+  
+      <div id="fb-root"></div>
+<script>
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=123456789012345";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+
+<div class="fb-comments" data-href="https://benny1923.github.io/2016/06/01/clear-google-chrome-hsts-setting/index.html" data-num-posts="5" data-width="840" data-colorscheme="light"></div>
+      
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="as_sitesearch" value="benny1923.github.io">
+  </form>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">Categories</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/Anodroid-%E9%96%8B%E7%99%BC%E3%80%81%E5%88%B7%E6%A9%9F%E5%A4%A7%E5%B0%8F%E4%BA%8B/">Anodroid 開發、刷機大小事</a><small>1</small></li>
+  
+    <li><a href="/categories/Linux/">Linux</a><small>1</small></li>
+  
+    <li><a href="/categories/Ubuntu/">Ubuntu</a><small>3</small></li>
+  
+    <li><a href="/categories/Windows/">Windows</a><small>3</small></li>
+  
+    <li><a href="/categories/%E5%85%B6%E4%BB%96/">其他</a><small>3</small></li>
+  
+    <li><a href="/categories/%E5%AF%AB%E7%A8%8B%E5%BC%8F%E7%9A%84%E5%BF%83%E5%BE%97/">寫程式的心得</a><small>2</small></li>
+  
+    <li><a href="/categories/%E7%84%A1%E7%B7%9A%E9%9B%BB/">無線電</a><small>3</small></li>
+  
+    <li><a href="/categories/%E9%9B%BB%E8%85%A6%E7%A1%AC%E9%AB%94/">電腦硬體</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">Tags</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/ASUS-Tinker-Board-2S/">ASUS Tinker Board 2S</a><small>1</small></li>
+  
+    <li><a href="/tags/Chrome/">Chrome</a><small>1</small></li>
+  
+    <li><a href="/tags/CloudFlare/">CloudFlare</a><small>1</small></li>
+  
+    <li><a href="/tags/DIY/">DIY</a><small>1</small></li>
+  
+    <li><a href="/tags/G3226/">G3226</a><small>1</small></li>
+  
+    <li><a href="/tags/Google-Chrome/">Google Chrome</a><small>1</small></li>
+  
+    <li><a href="/tags/HD-audio/">HD audio</a><small>1</small></li>
+  
+    <li><a href="/tags/HSTS/">HSTS</a><small>1</small></li>
+  
+    <li><a href="/tags/Live-USB/">Live USB</a><small>2</small></li>
+  
+    <li><a href="/tags/Recovery/">Recovery</a><small>1</small></li>
+  
+    <li><a href="/tags/SDR/">SDR</a><small>2</small></li>
+  
+    <li><a href="/tags/SDR/">SDR#</a><small>1</small></li>
+  
+    <li><a href="/tags/SDRsharp/">SDRsharp</a><small>2</small></li>
+  
+    <li><a href="/tags/UNetbootin/">UNetbootin</a><small>2</small></li>
+  
+    <li><a href="/tags/Ubuntu/">Ubuntu</a><small>3</small></li>
+  
+    <li><a href="/tags/Vivaldi/">Vivaldi</a><small>1</small></li>
+  
+    <li><a href="/tags/Xperia-XA1-Ultra/">Xperia XA1 Ultra</a><small>1</small></li>
+  
+    <li><a href="/tags/blog/">blog</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/kernel/">kernel</a><small>1</small></li>
+  
+    <li><a href="/tags/laravel/">laravel</a><small>1</small></li>
+  
+    <li><a href="/tags/linux/">linux</a><small>2</small></li>
+  
+    <li><a href="/tags/meteor-plugin/">meteor plugin</a><small>1</small></li>
+  
+    <li><a href="/tags/raspberry-pi/">raspberry pi</a><small>1</small></li>
+  
+    <li><a href="/tags/rk3399/">rk3399</a><small>1</small></li>
+  
+    <li><a href="/tags/root/">root</a><small>1</small></li>
+  
+    <li><a href="/tags/rootfs/">rootfs</a><small>1</small></li>
+  
+    <li><a href="/tags/sandbox/">sandbox</a><small>1</small></li>
+  
+    <li><a href="/tags/vagrant/">vagrant</a><small>1</small></li>
+  
+    <li><a href="/tags/virtualbox/">virtualbox</a><small>1</small></li>
+  
+    <li><a href="/tags/windows/">windows</a><small>2</small></li>
+  
+    <li><a href="/tags/windows-1903/">windows 1903</a><small>1</small></li>
+  
+    <li><a href="/tags/wordpress/">wordpress</a><small>1</small></li>
+  
+    <li><a href="/tags/%E4%B8%AD%E6%96%87%E5%8C%96/">中文化</a><small>1</small></li>
+  
+    <li><a href="/tags/%E4%BF%AE%E9%9B%BB%E8%85%A6/">修電腦</a><small>1</small></li>
+  
+    <li><a href="/tags/%E6%B2%99%E7%9B%92/">沙盒</a><small>1</small></li>
+  
+    <li><a href="/tags/%E6%B8%85%E9%99%A4HSTS/">清除HSTS</a><small>1</small></li>
+  
+    <li><a href="/tags/%E8%BB%9F%E9%AB%94%E7%84%A1%E7%B7%9A%E9%9B%BB/">軟體無線電</a><small>2</small></li>
+  
+    <li><a href="/tags/%E9%9F%B3%E6%95%88/">音效</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2023 Benny Ling
+  
+</div>
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+
+
+<script src="/js/gallery.js"></script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script>
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

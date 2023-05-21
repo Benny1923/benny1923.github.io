@@ -1,107 +1,71 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE HTML>
+<html lang="zh-tw">
 <head>
   <meta charset="utf-8">
   
+  <title>windows 10 沙盒 正式上線 自定義配置檔 自己寫 | Benny 隨手記</title>
+  <meta name="author" content="Benny Ling">
   
-  <title>windows 10 沙盒 正式上線 自定義配置檔 自己寫 | Hexo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="這星期1903上線拉，最讓我期待的是windows 10終於有內建的沙盒程式啦。 啟用方法很簡單，先確認自己更新到1903，然後去舊版控制台，程式集裡的「開啟或關閉Windows功能」把「Windows 沙箱」選項打勾然後確定完重新開機，然後你就可以在你的開始列表中找到「Windows Sandbox」。點下去就有一個隨開即用的沙盒模式，直接關掉裡面發生的事情就當沒有發生過，重開又是一個乾淨的新系">
-<meta property="og:type" content="article">
-<meta property="og:title" content="windows 10 沙盒 正式上線 自定義配置檔 自己寫">
-<meta property="og:url" content="http://blog.bennyling.cc/2019/05/25/windows-sandbox-config/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="這星期1903上線拉，最讓我期待的是windows 10終於有內建的沙盒程式啦。 啟用方法很簡單，先確認自己更新到1903，然後去舊版控制台，程式集裡的「開啟或關閉Windows功能」把「Windows 沙箱」選項打勾然後確定完重新開機，然後你就可以在你的開始列表中找到「Windows Sandbox」。點下去就有一個隨開即用的沙盒模式，直接關掉裡面發生的事情就當沒有發生過，重開又是一個乾淨的新系">
-<meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2019-05-25T04:45:53.000Z">
-<meta property="article:modified_time" content="2023-04-22T03:28:49.959Z">
-<meta property="article:author" content="John Doe">
-<meta property="article:tag" content="windows">
-<meta property="article:tag" content="sandbox">
-<meta property="article:tag" content="windows 1903">
-<meta property="article:tag" content="沙盒">
-<meta name="twitter:card" content="summary">
+  <meta name="description" content="這星期1903上線拉，最讓我期待的是windows 10終於有內建的沙盒程式啦。
+啟用方法很簡單，先確認自己更新到1903，然後去舊版控制台，程式集裡的「開啟或關閉Windows功能」把「Windows 沙箱」選項打勾然後確定完重新開機，然後你就可以在你的開始列表中找到「Windows Sandbo">
   
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
-  
-  
-    <link rel="shortcut icon" href="/favicon.png">
-  
-  
-    
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
+  <meta property="og:title" content="windows 10 沙盒 正式上線 自定義配置檔 自己寫"/>
+  <meta property="og:site_name" content="Benny 隨手記"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link rel="shortcut icon" href="/favicon.png">
   
   
 <link rel="stylesheet" href="/css/style.css">
 
+  <!--[if lt IE 9]><script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
   
-    
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
 
-  
 <meta name="generator" content="Hexo 6.3.0"></head>
 
+
 <body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Hexo</a>
-      </h1>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.bennyling.cc"></form>
-      </div>
-    </div>
-  </div>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Benny 隨手記</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/about">About</a></li>
+    
+      <li><a href="/links">Links</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
 </header>
-
-      <div class="outer">
-        <section id="main"><article id="post-windows-sandbox-config" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2019/05/25/windows-sandbox-config/" class="article-date">
-  <time class="dt-published" datetime="2019-05-25T04:45:53.000Z" itemprop="datePublished">2019-05-25</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Windows/">Windows</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article id="post-windows-sandbox-config" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   
-    <h1 class="p-name article-title" itemprop="headline name">
-      windows 10 沙盒 正式上線 自定義配置檔 自己寫
-    </h1>
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2019-05-25T04:45:53.000Z"><a href="/2019/05/25/windows-sandbox-config/">2019-05-25</a></time>
+      
+      
+  
+    <h1 class="p-name title" itemprop="headline name">windows 10 沙盒 正式上線 自定義配置檔 自己寫</h1>
   
 
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
       
         <p>這星期1903上線拉，最讓我期待的是windows 10終於有內建的沙盒程式啦。</p>
 <p>啟用方法很簡單，先確認自己更新到1903，然後去舊版控制台，程式集裡的「開啟或關閉Windows功能」把「Windows 沙箱」選項打勾然後確定完重新開機，然後你就可以在你的開始列表中找到「Windows Sandbox」。<br>點下去就有一個隨開即用的沙盒模式，直接關掉裡面發生的事情就當沒有發生過，重開又是一個乾淨的新系統。</p>
@@ -111,33 +75,27 @@
 <p> <configuration> 設定放這 </configuration></p>
 <p>所以這是一個xml格式的設定檔<br>所以可以在 <code>configuration</code> 的區段下寫配置<br>目前我查到支援的配置有</p>
 <p><strong>虛擬GPU(VGU)</strong>  </p>
-<p><vgpu>參數</vgpu></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">vgpu</span>&gt;</span>參數<span class="tag">&lt;/<span class="name">vgpu</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
 <p>有 <code>Disable</code> 和 <code>Default</code> 兩個參數  </p>
 <p><strong>網路功能</strong>(Networking)  </p>
-<p><networking>參數</networking></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">networking</span>&gt;</span>參數<span class="tag">&lt;/<span class="name">networking</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
 <p>有 <code>Disable</code> 和 <code>Default</code> 兩個參數  </p>
 <p><strong>資料夾映射</strong>(MappedFolders)  </p>
-<p><mappedFolders> 子項目 </mappedFolders> </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mappedFolders</span>&gt;</span> 子項目 <span class="tag">&lt;/<span class="name">mappedFolders</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
 <p>這裡面有子項目，參見下一節說明  </p>
 <p><strong>資料夾映射子項</strong>  </p>
-<mappedFolder>
-    <hostFolder>外部主機路徑</hostFolder> 
-    <readOnly>參數</readOnly> 
-</mappedFolder>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mappedFolder</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">hostFolder</span>&gt;</span>外部主機路徑<span class="tag">&lt;/<span class="name">hostFolder</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">readOnly</span>&gt;</span>參數<span class="tag">&lt;/<span class="name">readOnly</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;/<span class="name">mappedFolder</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p><code>HostFolder</code> 參數：外部主機資料夾路徑，例如：<code>C:\Users\Public\Downloads</code><br><code>ReadOnly</code>     參數：是否為唯讀模式，接受 <code>true</code> 或 <code>false</code><br>備註:目前所有的映射都是指向桌面，希望未來可以有指向其他地方的設定  </p>
 <p><strong>登入時執行</strong>(LogonCommand)  </p>
-<p><logonCcommand> <command>執行的指令</command> </logonCcommand></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">logonCommand</span>&gt;</span> <span class="tag">&lt;<span class="name">command</span>&gt;</span>執行的指令<span class="tag">&lt;/<span class="name">command</span>&gt;</span> <span class="tag">&lt;/<span class="name">logonCommand</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
 <p><code>Command</code> 參數：指令，程式或某個批次檔，例如要打開C:\的話：<code>explorer.exe C:\</code>  </p>
 <p>所以比如說我想把我的下載資料夾映射到沙盒中<br>設定檔就會長這樣<br>config.wsb</p>
-<configuration> 
-<mappedFolders> 
-    <mappedFolder>
-        <hostFolder>E:\\Downloads</hostFolder> 
-        <readOnly>true</readOnly> 
-    </mappedFolder> 
-</mappedFolders> 
-</configuration>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="name">mappedFolders</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">mappedFolder</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">hostFolder</span>&gt;</span>E:\\Downloads<span class="tag">&lt;/<span class="name">hostFolder</span>&gt;</span> </span><br><span class="line">        <span class="tag">&lt;<span class="name">readOnly</span>&gt;</span>true<span class="tag">&lt;/<span class="name">readOnly</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;/<span class="name">mappedFolder</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;/<span class="name">mappedFolders</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>最後直接點開你寫好的檔案，你就得到一個桌面上有一個映射資料夾的臨時windows環境了  </p>
 <p>這就是全部拉，需要參考的可以去下面參考連結找，有提供兩組範例<br>上一次寫文章都隔了423天，真的好久，預名都續費1次了…</p>
@@ -145,155 +103,201 @@
 
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.bennyling.cc/2019/05/25/windows-sandbox-config/" data-id="clgrfjoaj001vygkobc4321hf" data-title="windows 10 沙盒 正式上線 自定義配置檔 自己寫" class="article-share-link">Share</a>
+    <footer>
       
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sandbox/" rel="tag">sandbox</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/windows/" rel="tag">windows</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/windows-1903/" rel="tag">windows 1903</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B2%99%E7%9B%92/" rel="tag">沙盒</a></li></ul>
+        
+  
+  <div class="categories">
+    <a href="/categories/Windows/">Windows</a>
+  </div>
 
+        
+  
+  <div class="tags">
+    <a href="/tags/windows/">windows</a>, <a href="/tags/sandbox/">sandbox</a>, <a href="/tags/windows-1903/">windows 1903</a>, <a href="/tags/%E6%B2%99%E7%9B%92/">沙盒</a>
+  </div>
+
+      
+      <div class="clearfix"></div>
     </footer>
   </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2019/09/15/maintainlog1/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          網站維護日誌+CF的worker妙用
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2018/03/29/change-vagrant-and-virtualbox-default-vm-location/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">更改windows下vagrant和virtualbox預設VM安裝位置</div>
-    </a>
-  
-</nav>
-
-  
 </article>
 
 
-</section>
-        
-          <aside id="sidebar">
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Ubuntu/">Ubuntu</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Windows/">Windows</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/html-css-javascript/">html/css/javascript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AF%AB%E7%A8%8B%E5%BC%8F%E7%9A%84%E5%BF%83%E5%BE%97/">寫程式的心得</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%88%91%E7%9A%84%E6%AF%94%E7%89%B9%E5%B9%A3%E5%A4%A7%E5%B0%8F%E4%BA%8B/">我的比特幣大小事</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%84%A1%E7%B7%9A%E9%9B%BB/">無線電</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9B%BB%E8%85%A6%E7%A1%AC%E9%AB%94/">電腦硬體</a></li></ul>
-    </div>
-  </div>
-
+<section id="comment">
+  <h1 class="title">Comments</h1>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/2015/" rel="tag">2015</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/2016/" rel="tag">2016</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/4fun-tw/" rel="tag">4fun.tw</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ASUS-Tinker-Board-2S/" rel="tag">ASUS Tinker Board 2S</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CDN/" rel="tag">CDN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CloudFlare/" rel="tag">CloudFlare</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DIY/" rel="tag">DIY</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HD-audio/" rel="tag">HD audio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Live-USB/" rel="tag">Live USB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ltayer/" rel="tag">Ltayer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ltayer-bug-fix/" rel="tag">Ltayer bug fix</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ltayer-%E9%8C%AF%E8%AA%A4%E4%BF%AE%E6%AD%A3/" rel="tag">Ltayer 錯誤修正</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDR/" rel="tag">SDR</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDR/" rel="tag">SDR#</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDRsharp/" rel="tag">SDRsharp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/UNetbootin/" rel="tag">UNetbootin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/adf-ly/" rel="tag">adf.ly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/allen-disk-1-6/" rel="tag">allen disk 1.6</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apt-get/" rel="tag">apt-get</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash/" rel="tag">bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bit-ly/" rel="tag">bit.ly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bitcoin/" rel="tag">bitcoin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bridgeurl-com/" rel="tag">bridgeurl.com</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fur-ly/" rel="tag">fur.ly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/goo-gl/" rel="tag">goo.gl</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/htc-vive/" rel="tag">htc vive</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/laravel/" rel="tag">laravel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ltayer-for-bug-fix-ver/" rel="tag">ltayer for bug fix ver</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lxrun/" rel="tag">lxrun</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/meteor-plugin/" rel="tag">meteor plugin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orz-tw/" rel="tag">orz.tw</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ppt-cc/" rel="tag">ppt.cc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/raspberry-pi/" rel="tag">raspberry pi</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rk3399/" rel="tag">rk3399</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rocketscript/" rel="tag">rocketscript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rootfs/" rel="tag">rootfs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sandbox/" rel="tag">sandbox</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vagrant/" rel="tag">vagrant</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/virtualbox/" rel="tag">virtualbox</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows/" rel="tag">windows</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows-10/" rel="tag">windows 10</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows-10-bash/" rel="tag">windows 10 bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows-10-linux/" rel="tag">windows 10 linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows-1903/" rel="tag">windows 1903</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows-love-linux/" rel="tag">windows love linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%AD%E6%96%87%E5%8C%96/" rel="tag">中文化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BF%AE%E9%9B%BB%E8%85%A6/" rel="tag">修電腦</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%89%B5%E7%AB%99%E5%8D%8A%E5%91%A8%E5%B9%B4/" rel="tag">創站半周年</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8C%96%E7%A4%A6/" rel="tag">挖礦</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AF%94%E7%89%B9%E5%B9%A3/" rel="tag">比特幣</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B2%99%E7%9B%92/" rel="tag">沙盒</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%9F%AD%E7%B6%B2%E5%9D%80/" rel="tag">短網址</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B8%AE%E7%B6%B2%E5%9D%80/" rel="tag">縮網址</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BB%9F%E9%AB%94%E7%84%A1%E7%B7%9A%E9%9B%BB/" rel="tag">軟體無線電</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%89%E5%9D%80/" rel="tag">轉址</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9F%B3%E6%95%88/" rel="tag">音效</a></li></ul>
-    </div>
-  </div>
+      <div id="fb-root"></div>
+<script>
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=123456789012345";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
 
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/2015/" style="font-size: 10px;">2015</a> <a href="/tags/2016/" style="font-size: 10px;">2016</a> <a href="/tags/4fun-tw/" style="font-size: 10px;">4fun.tw</a> <a href="/tags/ASUS-Tinker-Board-2S/" style="font-size: 10px;">ASUS Tinker Board 2S</a> <a href="/tags/CDN/" style="font-size: 10px;">CDN</a> <a href="/tags/CloudFlare/" style="font-size: 13.33px;">CloudFlare</a> <a href="/tags/DIY/" style="font-size: 10px;">DIY</a> <a href="/tags/HD-audio/" style="font-size: 10px;">HD audio</a> <a href="/tags/Live-USB/" style="font-size: 13.33px;">Live USB</a> <a href="/tags/Ltayer/" style="font-size: 10px;">Ltayer</a> <a href="/tags/Ltayer-bug-fix/" style="font-size: 10px;">Ltayer bug fix</a> <a href="/tags/Ltayer-%E9%8C%AF%E8%AA%A4%E4%BF%AE%E6%AD%A3/" style="font-size: 10px;">Ltayer 錯誤修正</a> <a href="/tags/SDR/" style="font-size: 13.33px;">SDR</a> <a href="/tags/SDR/" style="font-size: 10px;">SDR#</a> <a href="/tags/SDRsharp/" style="font-size: 13.33px;">SDRsharp</a> <a href="/tags/UNetbootin/" style="font-size: 13.33px;">UNetbootin</a> <a href="/tags/Ubuntu/" style="font-size: 20px;">Ubuntu</a> <a href="/tags/adf-ly/" style="font-size: 10px;">adf.ly</a> <a href="/tags/allen-disk-1-6/" style="font-size: 10px;">allen disk 1.6</a> <a href="/tags/apt-get/" style="font-size: 10px;">apt-get</a> <a href="/tags/bash/" style="font-size: 10px;">bash</a> <a href="/tags/bit-ly/" style="font-size: 10px;">bit.ly</a> <a href="/tags/bitcoin/" style="font-size: 10px;">bitcoin</a> <a href="/tags/bridgeurl-com/" style="font-size: 10px;">bridgeurl.com</a> <a href="/tags/fur-ly/" style="font-size: 10px;">fur.ly</a> <a href="/tags/goo-gl/" style="font-size: 10px;">goo.gl</a> <a href="/tags/htc-vive/" style="font-size: 10px;">htc vive</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/kernel/" style="font-size: 10px;">kernel</a> <a href="/tags/laravel/" style="font-size: 10px;">laravel</a> <a href="/tags/linux/" style="font-size: 13.33px;">linux</a> <a href="/tags/ltayer-for-bug-fix-ver/" style="font-size: 10px;">ltayer for bug fix ver</a> <a href="/tags/lxrun/" style="font-size: 10px;">lxrun</a> <a href="/tags/meteor-plugin/" style="font-size: 10px;">meteor plugin</a> <a href="/tags/orz-tw/" style="font-size: 10px;">orz.tw</a> <a href="/tags/ppt-cc/" style="font-size: 10px;">ppt.cc</a> <a href="/tags/raspberry-pi/" style="font-size: 10px;">raspberry pi</a> <a href="/tags/rk3399/" style="font-size: 10px;">rk3399</a> <a href="/tags/rocketscript/" style="font-size: 10px;">rocketscript</a> <a href="/tags/rootfs/" style="font-size: 10px;">rootfs</a> <a href="/tags/sandbox/" style="font-size: 10px;">sandbox</a> <a href="/tags/vagrant/" style="font-size: 10px;">vagrant</a> <a href="/tags/virtualbox/" style="font-size: 10px;">virtualbox</a> <a href="/tags/windows/" style="font-size: 16.67px;">windows</a> <a href="/tags/windows-10/" style="font-size: 13.33px;">windows 10</a> <a href="/tags/windows-10-bash/" style="font-size: 16.67px;">windows 10 bash</a> <a href="/tags/windows-10-linux/" style="font-size: 13.33px;">windows 10 linux</a> <a href="/tags/windows-1903/" style="font-size: 10px;">windows 1903</a> <a href="/tags/windows-love-linux/" style="font-size: 10px;">windows love linux</a> <a href="/tags/%E4%B8%AD%E6%96%87%E5%8C%96/" style="font-size: 10px;">中文化</a> <a href="/tags/%E4%BF%AE%E9%9B%BB%E8%85%A6/" style="font-size: 10px;">修電腦</a> <a href="/tags/%E5%89%B5%E7%AB%99%E5%8D%8A%E5%91%A8%E5%B9%B4/" style="font-size: 10px;">創站半周年</a> <a href="/tags/%E6%8C%96%E7%A4%A6/" style="font-size: 10px;">挖礦</a> <a href="/tags/%E6%AF%94%E7%89%B9%E5%B9%A3/" style="font-size: 10px;">比特幣</a> <a href="/tags/%E6%B2%99%E7%9B%92/" style="font-size: 10px;">沙盒</a> <a href="/tags/%E7%9F%AD%E7%B6%B2%E5%9D%80/" style="font-size: 13.33px;">短網址</a> <a href="/tags/%E7%B8%AE%E7%B6%B2%E5%9D%80/" style="font-size: 13.33px;">縮網址</a> <a href="/tags/%E8%BB%9F%E9%AB%94%E7%84%A1%E7%B7%9A%E9%9B%BB/" style="font-size: 13.33px;">軟體無線電</a> <a href="/tags/%E8%BD%89%E5%9D%80/" style="font-size: 13.33px;">轉址</a> <a href="/tags/%E9%9F%B3%E6%95%88/" style="font-size: 10px;">音效</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">April 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">October 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">January 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">December 2013</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2023/04/22/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
-            <a href="/2022/06/12/asus-tinker-board-2s-ubuntu-server-22-04-for-raspi/">ASUS Tinker Board 2S 上 ubuntu server 22.04(for raspi)</a>
-          </li>
-        
-          <li>
-            <a href="/2020/12/29/proper-functioning-meteor-sdrsharp-plugin/">proper functioning meteor sdrsharp plugin</a>
-          </li>
-        
-          <li>
-            <a href="/2020/09/13/sdr-software/">軟體無線電(SDR)入門，軟體篇</a>
-          </li>
-        
-          <li>
-            <a href="/2020/08/30/sdr-hardware/">軟體無線電(SDR)入門，硬體篇</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
+<div class="fb-comments" data-href="https://benny1923.github.io/2019/05/25/windows-sandbox-config/index.html" data-num-posts="5" data-width="840" data-colorscheme="light"></div>
       
-      &copy; 2023 John Doe<br>
-      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
-    </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="as_sitesearch" value="benny1923.github.io">
+  </form>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">Categories</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/Anodroid-%E9%96%8B%E7%99%BC%E3%80%81%E5%88%B7%E6%A9%9F%E5%A4%A7%E5%B0%8F%E4%BA%8B/">Anodroid 開發、刷機大小事</a><small>1</small></li>
+  
+    <li><a href="/categories/Linux/">Linux</a><small>1</small></li>
+  
+    <li><a href="/categories/Ubuntu/">Ubuntu</a><small>3</small></li>
+  
+    <li><a href="/categories/Windows/">Windows</a><small>3</small></li>
+  
+    <li><a href="/categories/%E5%85%B6%E4%BB%96/">其他</a><small>3</small></li>
+  
+    <li><a href="/categories/%E5%AF%AB%E7%A8%8B%E5%BC%8F%E7%9A%84%E5%BF%83%E5%BE%97/">寫程式的心得</a><small>2</small></li>
+  
+    <li><a href="/categories/%E7%84%A1%E7%B7%9A%E9%9B%BB/">無線電</a><small>3</small></li>
+  
+    <li><a href="/categories/%E9%9B%BB%E8%85%A6%E7%A1%AC%E9%AB%94/">電腦硬體</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">Tags</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/ASUS-Tinker-Board-2S/">ASUS Tinker Board 2S</a><small>1</small></li>
+  
+    <li><a href="/tags/Chrome/">Chrome</a><small>1</small></li>
+  
+    <li><a href="/tags/CloudFlare/">CloudFlare</a><small>1</small></li>
+  
+    <li><a href="/tags/DIY/">DIY</a><small>1</small></li>
+  
+    <li><a href="/tags/G3226/">G3226</a><small>1</small></li>
+  
+    <li><a href="/tags/Google-Chrome/">Google Chrome</a><small>1</small></li>
+  
+    <li><a href="/tags/HD-audio/">HD audio</a><small>1</small></li>
+  
+    <li><a href="/tags/HSTS/">HSTS</a><small>1</small></li>
+  
+    <li><a href="/tags/Live-USB/">Live USB</a><small>2</small></li>
+  
+    <li><a href="/tags/Recovery/">Recovery</a><small>1</small></li>
+  
+    <li><a href="/tags/SDR/">SDR</a><small>2</small></li>
+  
+    <li><a href="/tags/SDR/">SDR#</a><small>1</small></li>
+  
+    <li><a href="/tags/SDRsharp/">SDRsharp</a><small>2</small></li>
+  
+    <li><a href="/tags/UNetbootin/">UNetbootin</a><small>2</small></li>
+  
+    <li><a href="/tags/Ubuntu/">Ubuntu</a><small>3</small></li>
+  
+    <li><a href="/tags/Vivaldi/">Vivaldi</a><small>1</small></li>
+  
+    <li><a href="/tags/Xperia-XA1-Ultra/">Xperia XA1 Ultra</a><small>1</small></li>
+  
+    <li><a href="/tags/blog/">blog</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/kernel/">kernel</a><small>1</small></li>
+  
+    <li><a href="/tags/laravel/">laravel</a><small>1</small></li>
+  
+    <li><a href="/tags/linux/">linux</a><small>2</small></li>
+  
+    <li><a href="/tags/meteor-plugin/">meteor plugin</a><small>1</small></li>
+  
+    <li><a href="/tags/raspberry-pi/">raspberry pi</a><small>1</small></li>
+  
+    <li><a href="/tags/rk3399/">rk3399</a><small>1</small></li>
+  
+    <li><a href="/tags/root/">root</a><small>1</small></li>
+  
+    <li><a href="/tags/rootfs/">rootfs</a><small>1</small></li>
+  
+    <li><a href="/tags/sandbox/">sandbox</a><small>1</small></li>
+  
+    <li><a href="/tags/vagrant/">vagrant</a><small>1</small></li>
+  
+    <li><a href="/tags/virtualbox/">virtualbox</a><small>1</small></li>
+  
+    <li><a href="/tags/windows/">windows</a><small>2</small></li>
+  
+    <li><a href="/tags/windows-1903/">windows 1903</a><small>1</small></li>
+  
+    <li><a href="/tags/wordpress/">wordpress</a><small>1</small></li>
+  
+    <li><a href="/tags/%E4%B8%AD%E6%96%87%E5%8C%96/">中文化</a><small>1</small></li>
+  
+    <li><a href="/tags/%E4%BF%AE%E9%9B%BB%E8%85%A6/">修電腦</a><small>1</small></li>
+  
+    <li><a href="/tags/%E6%B2%99%E7%9B%92/">沙盒</a><small>1</small></li>
+  
+    <li><a href="/tags/%E6%B8%85%E9%99%A4HSTS/">清除HSTS</a><small>1</small></li>
+  
+    <li><a href="/tags/%E8%BB%9F%E9%AB%94%E7%84%A1%E7%B7%9A%E9%9B%BB/">軟體無線電</a><small>2</small></li>
+  
+    <li><a href="/tags/%E9%9F%B3%E6%95%88/">音效</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
   </div>
-</footer>
-
-    </div>
-    <nav id="mobile-nav">
+  <footer id="footer" class="inner"><div class="alignleft">
   
-    <a href="/" class="mobile-nav-link">Home</a>
+  &copy; 2023 Benny Ling
   
-    <a href="/archives" class="mobile-nav-link">Archives</a>
+</div>
+<div class="clearfix"></div></footer>
   
-</nav>
-    
-
-
 <script src="/js/jquery-3.4.1.min.js"></script>
 
 
-
-  
-<script src="/fancybox/jquery.fancybox.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
 
 
-
-
-<script src="/js/script.js"></script>
+<script src="/js/gallery.js"></script>
 
 
 
 
 
-  </div>
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script>
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
 </body>
 </html>

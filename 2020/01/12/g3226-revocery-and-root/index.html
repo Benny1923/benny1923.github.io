@@ -1,0 +1,302 @@
+<!DOCTYPE HTML>
+<html lang="zh-tw">
+<head>
+  <meta charset="utf-8">
+  
+  <title>Sony Xperia XA1 Ultra(G3226) 刷TWRP Recovery+Root | Benny 隨手記</title>
+  <meta name="author" content="Benny Ling">
+  
+  <meta name="description" content="hi Android Root我又回來了，隨著手機功能越來越完善，Root這件事似乎變得沒那必要，但若想玩一些新奇的功能，那Root依然那裡等你，雖然近年來利用漏洞一鍵root的App的消失使root沒那麼容易，但對於熟悉刷機的你我都知道，製造商留了一扇窗給你…
+老樣子
+免責聲明: 刷機有風險，解鎖">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Sony Xperia XA1 Ultra(G3226) 刷TWRP Recovery+Root"/>
+  <meta property="og:site_name" content="Benny 隨手記"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link rel="shortcut icon" href="/favicon.png">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+  
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Benny 隨手記</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/about">About</a></li>
+    
+      <li><a href="/links">Links</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article id="post-g3226-revocery-and-root" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2020-01-12T05:39:54.000Z"><a href="/2020/01/12/g3226-revocery-and-root/">2020-01-12</a></time>
+      
+      
+  
+    <h1 class="p-name title" itemprop="headline name">Sony Xperia XA1 Ultra(G3226) 刷TWRP Recovery+Root</h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>hi Android Root我又回來了，隨著手機功能越來越完善，Root這件事似乎變得沒那必要，但若想玩一些新奇的功能，那Root依然那裡等你，雖然近年來利用漏洞一鍵root的App的消失使root沒那麼容易，但對於熟悉刷機的你我都知道，製造商留了一扇窗給你…</p>
+<p>老樣子</p>
+<p>免責聲明: 刷機有風險，解鎖失保固，操作前請再三評估，作者一概不負責</p>
+<p>好了不必多說，你需要的東西我列好了:</p>
+<ol>
+<li>一隻Xperia XA1 Ultra(我手上這支型號是G3226，雙卡版，但理論上叫這名字都可以用)</li>
+<li>一條傳輸線</li>
+<li>adb fastboot工具和相關驅動</li>
+<li>boot.img和recovery.img(詳見文末參考自第一條)</li>
+<li>對解鎖、刷機等名詞相關基礎名詞之認識(對，如果你是第一次玩可能得去其它地方爬文)</li>
+<li>記得備份，解鎖會清除資料</li>
+</ol>
+<h4 id="解鎖手機"><a href="#解鎖手機" class="headerlink" title="解鎖手機"></a>解鎖手機</h4><p>打開手機的電話，輸入<code>*#06#</code>看第一組IMEI號碼，記下來然後關閉，輸入下一組號碼<code>*#*#7378423#*#*</code>進入工程模式，選<code>Servie info &gt; Configuration</code>找到<code>Rooting status</code>下面那行，確定它寫著<code>Bootloader unlock allowed: Yes</code>就可以繼續進行下去，如果是No那就不用玩了。</p>
+<p>打開設定，進入<code>系統 &gt; 關於手機</code>，對著<code>版本號碼</code>連按7次回到<code>系統</code>找到<code>開發者選項</code>，打開<code>USB偵錯</code>和<code>OEM解鎖</code>(可能需要輸入手機密碼，如果你有設定的話)</p>
+<p>接上傳輸線，打開console(小黑窗)(注意!這邊假設你已經知道adb和fastboot的環境配置和小黑窗用法，不知道的可以去google”adb fastboot用法”，如果我寫了會分掉其他優秀作者的曝光度)<br>輸入:<br><code>adb devices</code><br>多留意一下手機，會有需要授權的提示，同意後，再輸入一次上面指令，確認裝置ID旁邊的狀態是<code>device</code>而不是<code>unauthorized</code>才能進行下一步</p>
+<p>輸入:<br><code>adb reboot bootloader</code><br>你的手機回重開進fastboot模式，LED會是藍燈，先不要碰它</p>
+<p>去<a target="_blank" rel="noopener" href="http://bit.ly/36Hehc2">Sony解鎖網站</a>最下面有<code>Select your device:</code>，選<code>Xperia XA1 Ultra</code>，再往下，在<code>Enter IMEI, IDID or MEID</code>中輸入剛剛記下的IMEI，下面第一個和第二個打勾，按<code>Submit</code>，會給你一組解鎖碼，複製下來</p>
+<p>回到小黑窗，輸入:<br><code>fastboot oem unlock 0x解鎖碼</code><br>確定訊息沒出現FAILED就解鎖了</p>
+<h4 id="刷Recovery"><a href="#刷Recovery" class="headerlink" title="刷Recovery"></a>刷Recovery</h4><p>接下來的部分是從文末參考那簡單翻譯過來的，任何我說明不清楚的部分可以去看看</p>
+<p>參考那邊沒有G3226的boot和recovery，但你可以抓G3212的版本(個人正在用)，基本上都是同一手機，只是在不同國家有其它型號。</p>
+<p>在fastboot模式輸入:<br><code>fastboot flash boot boot.img</code><br>沒有FAILED就是成功了<br>然後重啟:<br><code>fastboot reboot</code><br>重開好後你應該需要重新設定手機，然後再去開發者模式設定USB除錯(adb)<br>都處理好了輸入:<br><code>adb reboot bootloader</code><br>(注意手機授權請求)<br>進fastboot後輸入:<br><code>fastboot flash recovery recovery.img</code><br>沒有FAILED就是成功了<br>最後拔掉傳輸線</p>
+<h4 id="進recovery"><a href="#進recovery" class="headerlink" title="進recovery"></a>進recovery</h4><p>開機時同時按電源按鈕和音量向下鍵，向下鍵要按到手機震一下還有LED亮紫(?)燈才能放手</p>
+<p>這邊要是遇到需要輸入密碼請直接無視，然後去Wipe那邊選Format Data輸入yes即可</p>
+<h4 id="刷Root"><a href="#刷Root" class="headerlink" title="刷Root"></a>刷Root</h4><p>到這邊應該已經沒有老手在了吧，刷完Recovery基本就自由了<br>刷Root的簡短概述就是:</p>
+<ol>
+<li>下載<a target="_blank" rel="noopener" href="http://bit.ly/2Tdb2oK">Magisk</a>然後放進手機</li>
+<li>進Recovery選Install</li>
+<li>選剛剛放進去的卡刷包(在 &#x2F;sdcard 下)</li>
+<li>完成收工 ， 重新開機</li>
+</ol>
+<p>參考或翻譯自:<br>1.<a target="_blank" rel="noopener" href="http://bit.ly/37WCk6Z">https://forum.xda-developers.com/xa1-ultra/development/g3221-built-sources-t3622886</a></p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/Anodroid-%E9%96%8B%E7%99%BC%E3%80%81%E5%88%B7%E6%A9%9F%E5%A4%A7%E5%B0%8F%E4%BA%8B/">Anodroid 開發、刷機大小事</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/G3226/">G3226</a>, <a href="/tags/Recovery/">Recovery</a>, <a href="/tags/root/">root</a>, <a href="/tags/Xperia-XA1-Ultra/">Xperia XA1 Ultra</a>
+  </div>
+
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">Comments</h1>
+
+  
+      <div id="fb-root"></div>
+<script>
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=123456789012345";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+
+<div class="fb-comments" data-href="https://benny1923.github.io/2020/01/12/g3226-revocery-and-root/index.html" data-num-posts="5" data-width="840" data-colorscheme="light"></div>
+      
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="as_sitesearch" value="benny1923.github.io">
+  </form>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">Categories</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/Anodroid-%E9%96%8B%E7%99%BC%E3%80%81%E5%88%B7%E6%A9%9F%E5%A4%A7%E5%B0%8F%E4%BA%8B/">Anodroid 開發、刷機大小事</a><small>1</small></li>
+  
+    <li><a href="/categories/Linux/">Linux</a><small>1</small></li>
+  
+    <li><a href="/categories/Ubuntu/">Ubuntu</a><small>3</small></li>
+  
+    <li><a href="/categories/Windows/">Windows</a><small>3</small></li>
+  
+    <li><a href="/categories/%E5%85%B6%E4%BB%96/">其他</a><small>3</small></li>
+  
+    <li><a href="/categories/%E5%AF%AB%E7%A8%8B%E5%BC%8F%E7%9A%84%E5%BF%83%E5%BE%97/">寫程式的心得</a><small>2</small></li>
+  
+    <li><a href="/categories/%E7%84%A1%E7%B7%9A%E9%9B%BB/">無線電</a><small>3</small></li>
+  
+    <li><a href="/categories/%E9%9B%BB%E8%85%A6%E7%A1%AC%E9%AB%94/">電腦硬體</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">Tags</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/ASUS-Tinker-Board-2S/">ASUS Tinker Board 2S</a><small>1</small></li>
+  
+    <li><a href="/tags/Chrome/">Chrome</a><small>1</small></li>
+  
+    <li><a href="/tags/CloudFlare/">CloudFlare</a><small>1</small></li>
+  
+    <li><a href="/tags/DIY/">DIY</a><small>1</small></li>
+  
+    <li><a href="/tags/G3226/">G3226</a><small>1</small></li>
+  
+    <li><a href="/tags/Google-Chrome/">Google Chrome</a><small>1</small></li>
+  
+    <li><a href="/tags/HD-audio/">HD audio</a><small>1</small></li>
+  
+    <li><a href="/tags/HSTS/">HSTS</a><small>1</small></li>
+  
+    <li><a href="/tags/Live-USB/">Live USB</a><small>2</small></li>
+  
+    <li><a href="/tags/Recovery/">Recovery</a><small>1</small></li>
+  
+    <li><a href="/tags/SDR/">SDR</a><small>2</small></li>
+  
+    <li><a href="/tags/SDR/">SDR#</a><small>1</small></li>
+  
+    <li><a href="/tags/SDRsharp/">SDRsharp</a><small>2</small></li>
+  
+    <li><a href="/tags/UNetbootin/">UNetbootin</a><small>2</small></li>
+  
+    <li><a href="/tags/Ubuntu/">Ubuntu</a><small>3</small></li>
+  
+    <li><a href="/tags/Vivaldi/">Vivaldi</a><small>1</small></li>
+  
+    <li><a href="/tags/Xperia-XA1-Ultra/">Xperia XA1 Ultra</a><small>1</small></li>
+  
+    <li><a href="/tags/blog/">blog</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/kernel/">kernel</a><small>1</small></li>
+  
+    <li><a href="/tags/laravel/">laravel</a><small>1</small></li>
+  
+    <li><a href="/tags/linux/">linux</a><small>2</small></li>
+  
+    <li><a href="/tags/meteor-plugin/">meteor plugin</a><small>1</small></li>
+  
+    <li><a href="/tags/raspberry-pi/">raspberry pi</a><small>1</small></li>
+  
+    <li><a href="/tags/rk3399/">rk3399</a><small>1</small></li>
+  
+    <li><a href="/tags/root/">root</a><small>1</small></li>
+  
+    <li><a href="/tags/rootfs/">rootfs</a><small>1</small></li>
+  
+    <li><a href="/tags/sandbox/">sandbox</a><small>1</small></li>
+  
+    <li><a href="/tags/vagrant/">vagrant</a><small>1</small></li>
+  
+    <li><a href="/tags/virtualbox/">virtualbox</a><small>1</small></li>
+  
+    <li><a href="/tags/windows/">windows</a><small>2</small></li>
+  
+    <li><a href="/tags/windows-1903/">windows 1903</a><small>1</small></li>
+  
+    <li><a href="/tags/wordpress/">wordpress</a><small>1</small></li>
+  
+    <li><a href="/tags/%E4%B8%AD%E6%96%87%E5%8C%96/">中文化</a><small>1</small></li>
+  
+    <li><a href="/tags/%E4%BF%AE%E9%9B%BB%E8%85%A6/">修電腦</a><small>1</small></li>
+  
+    <li><a href="/tags/%E6%B2%99%E7%9B%92/">沙盒</a><small>1</small></li>
+  
+    <li><a href="/tags/%E6%B8%85%E9%99%A4HSTS/">清除HSTS</a><small>1</small></li>
+  
+    <li><a href="/tags/%E8%BB%9F%E9%AB%94%E7%84%A1%E7%B7%9A%E9%9B%BB/">軟體無線電</a><small>2</small></li>
+  
+    <li><a href="/tags/%E9%9F%B3%E6%95%88/">音效</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2023 Benny Ling
+  
+</div>
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+
+
+<script src="/js/gallery.js"></script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script>
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>
