@@ -49,6 +49,43 @@
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper">
+  <article id="post-change-vagrant-and-virtualbox-default-vm-location" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2018-03-29T12:45:25.000Z"><a href="/2018/03/29/change-vagrant-and-virtualbox-default-vm-location/">2018-03-29</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2018/03/29/change-vagrant-and-virtualbox-default-vm-location/">更改windows下vagrant和virtualbox預設VM安裝位置</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>身為一名苦逼的高中生，有時候被學校一些奇怪的文件格式和閱讀程式所以被windows綁住也是理所當然的(WTF<br>最近換了SSD，開機速度真的沒話說<br>換了SSD帶來的不一定只有好處</p>
+<blockquote>
+<p>使命：盡量不要把它填滿 – Benny @ 2018</p>
+</blockquote>
+<p>從前有個小男孩，他安裝程式就是下一步同意下一步到底<br>換了SSD後他需要仔細地看完每一步，並更改安裝位置到HDD<br>不得不說，SSD的容量真的很令我傷腦筋…<br>這還不打緊，SSD有明確的壽命問題，任何重要的資料放在SSD都不OK<br>最近在使用laravel開發網站<br>對，在windows上<br>想必得用到虛擬機之類的，但虛擬機真的超傷SSD(看那驚人的讀寫率)<br>照著官方的說明安裝虛擬機，發現他是裝在C碟的使用者資料夾下<br>搞什麼，我還不想那麼早讓SSD折壽<br>於是在網路上東找西找終於找到了類似的文章(感嘆google讚嘆google)<br>先說明我的環境 virtualbox 5.2.8 vagrant 2.0.3 在 windows 10 (build 1709) 全部都是64位元<br>不一定要用上面版本<br>那麼先把目標路徑的資料夾建好<br>然後執行<br><code>SystemPropertiesAdvanced.exe</code><br>打開「環境變數」<br>然後在使用者變數中新增一筆變數，叫「<code>VAGRANT_HOME</code>」，變數值輸入目的路徑加上「<code>.vargrant.d</code>」<br>好了確定保存<br><a href="https://blog.bennyling.cc/wp-content/uploads/2018/03/var.png"><img src="https://blog.bennyling.cc/wp-content/uploads/2018/03/var.png"></a><br>大概像這樣吧<br>然後去修改<br><code>C:\Users\[使用者名稱]\.VirtualBox\VirtualBox.xml</code><br>找到 <code>defaultMachineFolder</code>，並把他的值修改成目標資料夾<br><a href="https://blog.bennyling.cc/wp-content/uploads/2018/03/vm.png"><img src="https://blog.bennyling.cc/wp-content/uploads/2018/03/vm.png"></a><br>改完後你就可以開心地使用vagrant下載box和安裝box不用擔心容量和SSD被操死的問題了<br>嗯?你問我怎麼把laravel的專案移動到其他地方?<br>知道homestead.yaml吧?這麼做就好啦<br><a href="https://blog.bennyling.cc/wp-content/uploads/2018/03/homeconfig.png"><img src="https://blog.bennyling.cc/wp-content/uploads/2018/03/homeconfig.png"></a><br>以上內容參考自<br><a target="_blank" rel="noopener" href="https://medium.com/@cedricdue/moving-vagrant-boxes-and-related-virtualbox-vms-to-another-drive-f1d7c50d20bc">https:&#x2F;&#x2F;medium.com&#x2F;@cedricdue&#x2F;moving-vagrant-boxes-and-related-virtualbox-vms-to-another-drive-f1d7c50d20bc</a></p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
   <article id="post-clear-google-chrome-hsts-setting" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   
   <div class="post-content">
@@ -396,6 +433,10 @@
   
     <li><a href="/categories/Windows/">Windows</a><small>3</small></li>
   
+    <li><a href="/categories/linux/">linux</a><small>1</small></li>
+  
+    <li><a href="/categories/linux/monitoring/">monitoring</a><small>1</small></li>
+  
     <li><a href="/categories/%E5%85%B6%E4%BB%96/">其他</a><small>3</small></li>
   
     <li><a href="/categories/%E5%AF%AB%E7%A8%8B%E5%BC%8F%E7%9A%84%E5%BF%83%E5%BE%97/">寫程式的心得</a><small>2</small></li>
@@ -449,6 +490,8 @@
   
     <li><a href="/tags/blog/">blog</a><small>1</small></li>
   
+    <li><a href="/tags/docker/">docker</a><small>1</small></li>
+  
     <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
   
     <li><a href="/tags/kernel/">kernel</a><small>1</small></li>
@@ -468,6 +511,8 @@
     <li><a href="/tags/rootfs/">rootfs</a><small>1</small></li>
   
     <li><a href="/tags/sandbox/">sandbox</a><small>1</small></li>
+  
+    <li><a href="/tags/smokeping/">smokeping</a><small>1</small></li>
   
     <li><a href="/tags/vagrant/">vagrant</a><small>1</small></li>
   

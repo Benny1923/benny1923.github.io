@@ -49,6 +49,80 @@
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper">
+  <article id="post-smokeping-with-docker" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2023-07-30T06:33:49.000Z"><a href="/2023/07/30/smokeping-with-docker/">2023-07-30</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2023/07/30/smokeping-with-docker/">用 docker 架設 smokeping 支援ipv6 監視網路延遲</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>總感覺家裡網路怪怪的，用 docker 架設一個 smokeping 監視網路延遲</p>
+<p>步驟如下:</p>
+<ol>
+<li>安裝docker</li>
+<li>設定ipv6</li>
+<li>寫docker-compose.yaml</li>
+<li>smokeping, 啟動!</li>
+</ol>
+<h2 id="安裝-docker"><a href="#安裝-docker" class="headerlink" title="安裝 docker"></a>安裝 docker</h2><p>這邊不使用發行版的 docker.io package，用官方的 repo, 之後可以用apt更新</p>
+<p><a target="_blank" rel="noopener" href="https://docs.docker.com/engine/install/debian/">https://docs.docker.com/engine/install/debian/</a></p>
+<h2 id="設定ipv6"><a href="#設定ipv6" class="headerlink" title="設定ipv6"></a>設定ipv6</h2><p>docker 預設不啟用 ipv6, 所以如果要讓 smokeping 能用 ping6, 這個步驟是必須的</p>
+<p>還好, 設定並不難</p>
+<p>新增並修改<code>/etc/docker/daemon.json</code></p>
+<p>內容如下:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;ipv6&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;fixed-cidr-v6&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2001:db8:1::/64&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;ip6tables&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;experimental&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>預設 network <code>bridge</code> 使用 <code>fixed-cidr-v6</code> 配發位址, <code>ip6tables</code> 轉發流量<br><code>ip6tables</code> 屬於實驗功能, 需要啟用<code>experimental</code></p>
+<h2 id="寫-docker-compose-yaml"><a href="#寫-docker-compose-yaml" class="headerlink" title="寫 docker-compose.yaml"></a>寫 docker-compose.yaml</h2><p>你完全可以用 <code>docker run</code>, 但我喜歡用compose管理container</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> smokeping</span><br><span class="line"><span class="built_in">cd</span> smokeping</span><br><span class="line"><span class="built_in">touch</span> docker-compose.yaml</span><br></pre></td></tr></table></figure>
+
+<p>編輯 <code>docker-compose.yaml</code></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3.9&#x27;</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">smokeping:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">lscr.io/linuxserver/smokeping:latest</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">smokeping</span></span><br><span class="line">    <span class="attr">network_mode:</span> <span class="string">bridge</span></span><br><span class="line">    <span class="attr">security_opt:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="literal">no</span><span class="string">-new-privileges:true</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">PUID=1000</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">PGID=1000</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">TZ=Asia/Taipei</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">$PWD/config:/config</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">$PWD/data:/data</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">8003</span><span class="string">:80</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br></pre></td></tr></table></figure>
+
+<p><code>/config</code>: smokeping 設定<br><code>/data</code>: smokeping 的資料庫</p>
+<p>修改 <code>ports</code> 的 8003 對應到你想要開放的通訊阜</p>
+<h3 id="設定-smokeping"><a href="#設定-smokeping" class="headerlink" title="設定 smokeping"></a>設定 smokeping</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker compose up</span><br></pre></td></tr></table></figure>
+<p>等它初始化完成後 <code>ctrl + c</code>關閉</p>
+<p>修改 <code>config/Targets</code></p>
+<p>找到類似這個區域</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">+ InternetSites</span><br><span class="line"></span><br><span class="line">menu = Internet Sites</span><br><span class="line">title = Internet Sites</span><br><span class="line">probe = FPing</span><br><span class="line"></span><br><span class="line">++ Facebook</span><br><span class="line">menu = Facebook</span><br><span class="line">title = Facebook</span><br><span class="line">host = facebook.com</span><br><span class="line"></span><br><span class="line">++ Youtube</span><br><span class="line">menu = YouTube</span><br><span class="line">title = YouTube</span><br><span class="line">host = youtube.com</span><br><span class="line"></span><br><span class="line">++ GoogleSearch</span><br><span class="line">menu = Google</span><br><span class="line">title = google.com</span><br><span class="line">host = google.com</span><br></pre></td></tr></table></figure>
+
+<p><code>+</code>用來標示目錄層級, 不允許名稱有空白, 這裡的名稱也會作為資料庫的索引</p>
+<p><code>probe</code>: <strong>重要</strong> 探針, 測試主機的方法, 定義在 <code>config/Probes</code> 中, 如果想測試ipv6, 使用 <code>FPing6</code> 取代 <code>FPing</code></p>
+<p><code>menu</code>: 顯示在左邊目錄的名稱</p>
+<p><code>title</code>: 頁面標題</p>
+<p><code>host</code>: 測試主機</p>
+<p>更詳細的說明可以在 <a target="_blank" rel="noopener" href="https://oss.oetiker.ch/smokeping/doc/smokeping_config.en.html">官方文件</a> 中找到</p>
+<h2 id="smokeping-啟動"><a href="#smokeping-啟動" class="headerlink" title="smokeping, 啟動!"></a>smokeping, 啟動!</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker compose up -d</span><br></pre></td></tr></table></figure>
+
+<h2 id="後記"><a href="#後記" class="headerlink" title="後記"></a>後記</h2><p>網路是真的有問題… ipv6 掉包掉的很嚴重</p>
+<p><img src="/2023/07/smokeping-google-ipv6.png" alt="google ipv6"></p>
+<h2 id="參考"><a href="#參考" class="headerlink" title="參考:"></a>參考:</h2><p>docker ipv6 support: <a target="_blank" rel="noopener" href="https://docs.docker.com/config/daemon/ipv6/">https://docs.docker.com/config/daemon/ipv6/</a></p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
   <article id="post-migrate-to-hexo" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   
   <div class="post-content">
@@ -530,43 +604,6 @@
 
 
 
-  <article id="post-change-vagrant-and-virtualbox-default-vm-location" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time class="dt-published" datetime="2018-03-29T12:45:25.000Z"><a href="/2018/03/29/change-vagrant-and-virtualbox-default-vm-location/">2018-03-29</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2018/03/29/change-vagrant-and-virtualbox-default-vm-location/">更改windows下vagrant和virtualbox預設VM安裝位置</a></h1>
-  
-
-    </header>
-    <div class="e-content entry" itemprop="articleBody">
-      
-        <p>身為一名苦逼的高中生，有時候被學校一些奇怪的文件格式和閱讀程式所以被windows綁住也是理所當然的(WTF<br>最近換了SSD，開機速度真的沒話說<br>換了SSD帶來的不一定只有好處</p>
-<blockquote>
-<p>使命：盡量不要把它填滿 – Benny @ 2018</p>
-</blockquote>
-<p>從前有個小男孩，他安裝程式就是下一步同意下一步到底<br>換了SSD後他需要仔細地看完每一步，並更改安裝位置到HDD<br>不得不說，SSD的容量真的很令我傷腦筋…<br>這還不打緊，SSD有明確的壽命問題，任何重要的資料放在SSD都不OK<br>最近在使用laravel開發網站<br>對，在windows上<br>想必得用到虛擬機之類的，但虛擬機真的超傷SSD(看那驚人的讀寫率)<br>照著官方的說明安裝虛擬機，發現他是裝在C碟的使用者資料夾下<br>搞什麼，我還不想那麼早讓SSD折壽<br>於是在網路上東找西找終於找到了類似的文章(感嘆google讚嘆google)<br>先說明我的環境 virtualbox 5.2.8 vagrant 2.0.3 在 windows 10 (build 1709) 全部都是64位元<br>不一定要用上面版本<br>那麼先把目標路徑的資料夾建好<br>然後執行<br><code>SystemPropertiesAdvanced.exe</code><br>打開「環境變數」<br>然後在使用者變數中新增一筆變數，叫「<code>VAGRANT_HOME</code>」，變數值輸入目的路徑加上「<code>.vargrant.d</code>」<br>好了確定保存<br><a href="https://blog.bennyling.cc/wp-content/uploads/2018/03/var.png"><img src="https://blog.bennyling.cc/wp-content/uploads/2018/03/var.png"></a><br>大概像這樣吧<br>然後去修改<br><code>C:\Users\[使用者名稱]\.VirtualBox\VirtualBox.xml</code><br>找到 <code>defaultMachineFolder</code>，並把他的值修改成目標資料夾<br><a href="https://blog.bennyling.cc/wp-content/uploads/2018/03/vm.png"><img src="https://blog.bennyling.cc/wp-content/uploads/2018/03/vm.png"></a><br>改完後你就可以開心地使用vagrant下載box和安裝box不用擔心容量和SSD被操死的問題了<br>嗯?你問我怎麼把laravel的專案移動到其他地方?<br>知道homestead.yaml吧?這麼做就好啦<br><a href="https://blog.bennyling.cc/wp-content/uploads/2018/03/homeconfig.png"><img src="https://blog.bennyling.cc/wp-content/uploads/2018/03/homeconfig.png"></a><br>以上內容參考自<br><a target="_blank" rel="noopener" href="https://medium.com/@cedricdue/moving-vagrant-boxes-and-related-virtualbox-vms-to-another-drive-f1d7c50d20bc">https:&#x2F;&#x2F;medium.com&#x2F;@cedricdue&#x2F;moving-vagrant-boxes-and-related-virtualbox-vms-to-another-drive-f1d7c50d20bc</a></p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -588,6 +625,10 @@
     <li><a href="/categories/Ubuntu/">Ubuntu</a><small>3</small></li>
   
     <li><a href="/categories/Windows/">Windows</a><small>3</small></li>
+  
+    <li><a href="/categories/linux/">linux</a><small>1</small></li>
+  
+    <li><a href="/categories/linux/monitoring/">monitoring</a><small>1</small></li>
   
     <li><a href="/categories/%E5%85%B6%E4%BB%96/">其他</a><small>3</small></li>
   
@@ -642,6 +683,8 @@
   
     <li><a href="/tags/blog/">blog</a><small>1</small></li>
   
+    <li><a href="/tags/docker/">docker</a><small>1</small></li>
+  
     <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
   
     <li><a href="/tags/kernel/">kernel</a><small>1</small></li>
@@ -661,6 +704,8 @@
     <li><a href="/tags/rootfs/">rootfs</a><small>1</small></li>
   
     <li><a href="/tags/sandbox/">sandbox</a><small>1</small></li>
+  
+    <li><a href="/tags/smokeping/">smokeping</a><small>1</small></li>
   
     <li><a href="/tags/vagrant/">vagrant</a><small>1</small></li>
   
