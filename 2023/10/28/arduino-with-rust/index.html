@@ -1,0 +1,372 @@
+<!DOCTYPE HTML>
+<html lang="zh-tw">
+<head>
+  <meta charset="utf-8">
+  
+  <title>用rust寫arduino操作lcd | Benny 隨手記</title>
+  <meta name="author" content="Benny Ling">
+  
+  <meta name="description" content="在零件包找到 20x4 的 lcd 顯示器，想要測試還能不能用
+手上還有一片 arduino uno，就用它好了
+用arduino IDE嗎，感覺沒什麼意思(沒有，我沒有看不起用arduino IDE的人的意思
+聽說 rust 可以寫很多開發版的程式了，來玩玩看好了
+接線表:
+
+
+
+uno 板
+LC">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="用rust寫arduino操作lcd"/>
+  <meta property="og:site_name" content="Benny 隨手記"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link rel="shortcut icon" href="/favicon.png">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+  
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Benny 隨手記</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/about">About</a></li>
+    
+      <li><a href="/links">Links</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article id="post-arduino-with-rust" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2023-10-28T04:15:58.000Z"><a href="/2023/10/28/arduino-with-rust/">2023-10-28</a></time>
+      
+      
+  
+    <h1 class="p-name title" itemprop="headline name">用rust寫arduino操作lcd</h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>在零件包找到 20x4 的 lcd 顯示器，想要測試還能不能用</p>
+<p>手上還有一片 arduino uno，就用它好了</p>
+<p>用arduino IDE嗎，感覺沒什麼意思(沒有，我沒有看不起用arduino IDE的人的意思</p>
+<p>聽說 rust 可以寫很多開發版的程式了，來玩玩看好了</p>
+<p>接線表:</p>
+<table>
+<thead>
+<tr>
+<th>uno 板</th>
+<th>LCD</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>12</td>
+<td>RS</td>
+</tr>
+<tr>
+<td>11</td>
+<td>RW</td>
+</tr>
+<tr>
+<td>10</td>
+<td>EN</td>
+</tr>
+<tr>
+<td>4</td>
+<td>D7</td>
+</tr>
+<tr>
+<td>5</td>
+<td>D6</td>
+</tr>
+<tr>
+<td>6</td>
+<td>D5</td>
+</tr>
+<tr>
+<td>7</td>
+<td>D4</td>
+</tr>
+<tr>
+<td>GND</td>
+<td>VSS, Vo, K</td>
+</tr>
+<tr>
+<td>5v</td>
+<td>VCC, A</td>
+</tr>
+</tbody></table>
+<p>資料腳反順序接，這什麼反人類接法…</p>
+<p>正來來說Vo用來控制對比度, 實際上要接一個可變電阻</p>
+<p>但手邊沒有，直接接地</p>
+<h2 id="安裝avr工具"><a href="#安裝avr工具" class="headerlink" title="安裝avr工具"></a>安裝avr工具</h2><p>除了rust官方的編譯器外，你還需要 avr 相關的工具</p>
+<p>下面是從 avr-hal 的 readme 節錄:</p>
+<p>安裝scoop(windows 的包管理器):</p>
+<p>開啟 powershell ，輸入以下指令:</p>
+<figure class="highlight ps1"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Set-ExecutionPolicy</span> RemoteSigned <span class="literal">-Scope</span> CurrentUser <span class="comment"># 線上腳本執行權限</span></span><br><span class="line"><span class="built_in">irm</span> get.scoop.sh | <span class="built_in">iex</span> <span class="comment"># 安裝 scoop</span></span><br><span class="line">scoop install avr<span class="literal">-gcc</span> <span class="comment"># 安裝 avr-gcc</span></span><br><span class="line">scoop install avrdude <span class="comment"># avr 燒錄工具</span></span><br></pre></td></tr></table></figure>
+
+<p>接下來要用cargo安裝整合工具:</p>
+<p>用可以跑 cargo 的終端就行:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cargo +stable install ravedude</span><br><span class="line">cargo install cargo-generate</span><br></pre></td></tr></table></figure>
+
+<h2 id="寫一個簡單程式"><a href="#寫一個簡單程式" class="headerlink" title="寫一個簡單程式"></a>寫一個簡單程式</h2><p>要先產生一個專案:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo generate --git https://github.com/Rahix/avr-hal-template.git</span><br></pre></td></tr></table></figure>
+
+<p>過程讓你輸入專案名稱和目標開發版</p>
+<p>完成後用你習慣的編輯器打開資料夾就行</p>
+<p>接下來安裝lcd的library</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先確定你是在專案資料夾下</span></span><br><span class="line">cargo add hd44780-driver</span><br></pre></td></tr></table></figure>
+
+<p>然後就可以愉快寫程式拉</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/main.rs</span></span><br><span class="line"><span class="meta">#![no_std]</span></span><br><span class="line"><span class="meta">#![no_main]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> hd44780_driver::&#123;HD44780, Cursor, CursorBlink&#125;;</span><br><span class="line"><span class="keyword">use</span> panic_halt <span class="keyword">as</span> _;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[arduino_hal::entry]</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() <span class="punctuation">-&gt;</span> ! &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">dp</span> = arduino_hal::Peripherals::<span class="title function_ invoke__">take</span>().<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">pins</span> = arduino_hal::pins!(dp);</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">delay</span> = arduino_hal::Delay::<span class="title function_ invoke__">new</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">led</span> = pins.d13.<span class="title function_ invoke__">into_output</span>();</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">rs</span> = pins.d12.<span class="title function_ invoke__">into_output</span>();</span><br><span class="line">    <span class="comment">// 沒用到, 但你不宣告他不會動</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">rw</span> = pins.d11.<span class="title function_ invoke__">into_output</span>();</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">en</span> = pins.d10.<span class="title function_ invoke__">into_output</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">d4</span> = pins.d5.<span class="title function_ invoke__">into_output</span>();</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">d5</span> = pins.d4.<span class="title function_ invoke__">into_output</span>();</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">d6</span> = pins.d3.<span class="title function_ invoke__">into_output</span>();</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">d7</span> = pins.d2.<span class="title function_ invoke__">into_output</span>();</span><br><span class="line">    <span class="comment">// 定義輸出腳位</span></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">lcd</span> = HD44780::<span class="title function_ invoke__">new_4bit</span>(rs, en, d4, d5, d6, d7, &amp;<span class="keyword">mut</span> delay).<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化</span></span><br><span class="line">    lcd.<span class="title function_ invoke__">reset</span>(&amp;<span class="keyword">mut</span> delay);</span><br><span class="line">    lcd.<span class="title function_ invoke__">clear</span>(&amp;<span class="keyword">mut</span> delay);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 不要游標</span></span><br><span class="line">    lcd.<span class="title function_ invoke__">set_cursor_visibility</span>(Cursor::Invisible, &amp;<span class="keyword">mut</span> delay);</span><br><span class="line">    <span class="comment">// 不要閃爍</span></span><br><span class="line">    lcd.<span class="title function_ invoke__">set_cursor_blink</span>(CursorBlink::Off, &amp;<span class="keyword">mut</span> delay);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 輸出</span></span><br><span class="line">    lcd.<span class="title function_ invoke__">write_str</span>(<span class="string">&quot;Hello World!&quot;</span>, &amp;<span class="keyword">mut</span> delay);</span><br><span class="line">    <span class="comment">// 定位到第二行</span></span><br><span class="line">    lcd.<span class="title function_ invoke__">set_cursor_pos</span>(<span class="number">40</span>, &amp;<span class="keyword">mut</span> delay);</span><br><span class="line">    lcd.<span class="title function_ invoke__">write_str</span>(<span class="string">&quot;greeting from rust&quot;</span>, &amp;<span class="keyword">mut</span> delay);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">loop</span> &#123;</span><br><span class="line">        led.<span class="title function_ invoke__">toggle</span>();</span><br><span class="line">        arduino_hal::<span class="title function_ invoke__">delay_ms</span>(<span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>執行程式也很簡單:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># arduino on COM3</span></span><br><span class="line">RAVEDUDE_PORT=COM3 cargo run</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2023/10/uno-lcd.png"></p>
+<p>embedded-hal 十分強大，基於該抽象層的功能都能輕易移植到有實作的平台</p>
+<p>下次來玩玩看一起被翻出來的8266好了…</p>
+<h2 id="參考"><a href="#參考" class="headerlink" title="參考:"></a>參考:</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/Rahix/avr-hal">https://github.com/Rahix/avr-hal</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/johndoneth/hd44780-driver">https://github.com/johndoneth/hd44780-driver</a></li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/rust/">rust</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/rust/">rust</a>, <a href="/tags/lcd/">lcd</a>, <a href="/tags/hd44780/">hd44780</a>
+  </div>
+
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">Comments</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  
+<div class="widget tag">
+  <h3 class="title">Categories</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/Anodroid-%E9%96%8B%E7%99%BC%E3%80%81%E5%88%B7%E6%A9%9F%E5%A4%A7%E5%B0%8F%E4%BA%8B/">Anodroid 開發、刷機大小事</a><small>1</small></li>
+  
+    <li><a href="/categories/Linux/">Linux</a><small>1</small></li>
+  
+    <li><a href="/categories/Ubuntu/">Ubuntu</a><small>3</small></li>
+  
+    <li><a href="/categories/Windows/">Windows</a><small>3</small></li>
+  
+    <li><a href="/categories/linux/">linux</a><small>1</small></li>
+  
+    <li><a href="/categories/linux/monitoring/">monitoring</a><small>1</small></li>
+  
+    <li><a href="/categories/rust/">rust</a><small>1</small></li>
+  
+    <li><a href="/categories/%E5%85%B6%E4%BB%96/">其他</a><small>3</small></li>
+  
+    <li><a href="/categories/%E5%AF%AB%E7%A8%8B%E5%BC%8F%E7%9A%84%E5%BF%83%E5%BE%97/">寫程式的心得</a><small>2</small></li>
+  
+    <li><a href="/categories/%E7%84%A1%E7%B7%9A%E9%9B%BB/">無線電</a><small>3</small></li>
+  
+    <li><a href="/categories/%E9%9B%BB%E8%85%A6%E7%A1%AC%E9%AB%94/">電腦硬體</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">Tags</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/ASUS-Tinker-Board-2S/">ASUS Tinker Board 2S</a><small>1</small></li>
+  
+    <li><a href="/tags/Chrome/">Chrome</a><small>1</small></li>
+  
+    <li><a href="/tags/CloudFlare/">CloudFlare</a><small>1</small></li>
+  
+    <li><a href="/tags/DIY/">DIY</a><small>1</small></li>
+  
+    <li><a href="/tags/G3226/">G3226</a><small>1</small></li>
+  
+    <li><a href="/tags/Google-Chrome/">Google Chrome</a><small>1</small></li>
+  
+    <li><a href="/tags/HD-audio/">HD audio</a><small>1</small></li>
+  
+    <li><a href="/tags/HSTS/">HSTS</a><small>1</small></li>
+  
+    <li><a href="/tags/Live-USB/">Live USB</a><small>2</small></li>
+  
+    <li><a href="/tags/Recovery/">Recovery</a><small>1</small></li>
+  
+    <li><a href="/tags/SDR/">SDR</a><small>2</small></li>
+  
+    <li><a href="/tags/SDR/">SDR#</a><small>1</small></li>
+  
+    <li><a href="/tags/SDRsharp/">SDRsharp</a><small>2</small></li>
+  
+    <li><a href="/tags/UNetbootin/">UNetbootin</a><small>2</small></li>
+  
+    <li><a href="/tags/Ubuntu/">Ubuntu</a><small>3</small></li>
+  
+    <li><a href="/tags/Vivaldi/">Vivaldi</a><small>1</small></li>
+  
+    <li><a href="/tags/Xperia-XA1-Ultra/">Xperia XA1 Ultra</a><small>1</small></li>
+  
+    <li><a href="/tags/blog/">blog</a><small>1</small></li>
+  
+    <li><a href="/tags/docker/">docker</a><small>1</small></li>
+  
+    <li><a href="/tags/hd44780/">hd44780</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/kernel/">kernel</a><small>1</small></li>
+  
+    <li><a href="/tags/laravel/">laravel</a><small>1</small></li>
+  
+    <li><a href="/tags/lcd/">lcd</a><small>1</small></li>
+  
+    <li><a href="/tags/linux/">linux</a><small>2</small></li>
+  
+    <li><a href="/tags/meteor-plugin/">meteor plugin</a><small>1</small></li>
+  
+    <li><a href="/tags/raspberry-pi/">raspberry pi</a><small>1</small></li>
+  
+    <li><a href="/tags/rk3399/">rk3399</a><small>1</small></li>
+  
+    <li><a href="/tags/root/">root</a><small>1</small></li>
+  
+    <li><a href="/tags/rootfs/">rootfs</a><small>1</small></li>
+  
+    <li><a href="/tags/rust/">rust</a><small>1</small></li>
+  
+    <li><a href="/tags/sandbox/">sandbox</a><small>1</small></li>
+  
+    <li><a href="/tags/smokeping/">smokeping</a><small>1</small></li>
+  
+    <li><a href="/tags/vagrant/">vagrant</a><small>1</small></li>
+  
+    <li><a href="/tags/virtualbox/">virtualbox</a><small>1</small></li>
+  
+    <li><a href="/tags/windows/">windows</a><small>2</small></li>
+  
+    <li><a href="/tags/windows-1903/">windows 1903</a><small>1</small></li>
+  
+    <li><a href="/tags/wordpress/">wordpress</a><small>1</small></li>
+  
+    <li><a href="/tags/%E4%B8%AD%E6%96%87%E5%8C%96/">中文化</a><small>1</small></li>
+  
+    <li><a href="/tags/%E4%BF%AE%E9%9B%BB%E8%85%A6/">修電腦</a><small>1</small></li>
+  
+    <li><a href="/tags/%E6%B2%99%E7%9B%92/">沙盒</a><small>1</small></li>
+  
+    <li><a href="/tags/%E6%B8%85%E9%99%A4HSTS/">清除HSTS</a><small>1</small></li>
+  
+    <li><a href="/tags/%E8%BB%9F%E9%AB%94%E7%84%A1%E7%B7%9A%E9%9B%BB/">軟體無線電</a><small>2</small></li>
+  
+    <li><a href="/tags/%E9%9F%B3%E6%95%88/">音效</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2013-2023 Benny Ling
+  
+  Powered by Hexo. Licensed under CC BY-NC-SA 3.0
+</div>
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+
+
+<script src="/js/gallery.js"></script>
+
+
+
+<script>
+var disqus_shortname = 'dtitw';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script>
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

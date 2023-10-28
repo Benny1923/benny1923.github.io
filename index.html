@@ -49,6 +49,121 @@
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper">
+  <article id="post-arduino-with-rust" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2023-10-28T04:15:58.000Z"><a href="/2023/10/28/arduino-with-rust/">2023-10-28</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2023/10/28/arduino-with-rust/">用rust寫arduino操作lcd</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>在零件包找到 20x4 的 lcd 顯示器，想要測試還能不能用</p>
+<p>手上還有一片 arduino uno，就用它好了</p>
+<p>用arduino IDE嗎，感覺沒什麼意思(沒有，我沒有看不起用arduino IDE的人的意思</p>
+<p>聽說 rust 可以寫很多開發版的程式了，來玩玩看好了</p>
+<p>接線表:</p>
+<table>
+<thead>
+<tr>
+<th>uno 板</th>
+<th>LCD</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>12</td>
+<td>RS</td>
+</tr>
+<tr>
+<td>11</td>
+<td>RW</td>
+</tr>
+<tr>
+<td>10</td>
+<td>EN</td>
+</tr>
+<tr>
+<td>4</td>
+<td>D7</td>
+</tr>
+<tr>
+<td>5</td>
+<td>D6</td>
+</tr>
+<tr>
+<td>6</td>
+<td>D5</td>
+</tr>
+<tr>
+<td>7</td>
+<td>D4</td>
+</tr>
+<tr>
+<td>GND</td>
+<td>VSS, Vo, K</td>
+</tr>
+<tr>
+<td>5v</td>
+<td>VCC, A</td>
+</tr>
+</tbody></table>
+<p>資料腳反順序接，這什麼反人類接法…</p>
+<p>正來來說Vo用來控制對比度, 實際上要接一個可變電阻</p>
+<p>但手邊沒有，直接接地</p>
+<h2 id="安裝avr工具"><a href="#安裝avr工具" class="headerlink" title="安裝avr工具"></a>安裝avr工具</h2><p>除了rust官方的編譯器外，你還需要 avr 相關的工具</p>
+<p>下面是從 avr-hal 的 readme 節錄:</p>
+<p>安裝scoop(windows 的包管理器):</p>
+<p>開啟 powershell ，輸入以下指令:</p>
+<figure class="highlight ps1"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Set-ExecutionPolicy</span> RemoteSigned <span class="literal">-Scope</span> CurrentUser <span class="comment"># 線上腳本執行權限</span></span><br><span class="line"><span class="built_in">irm</span> get.scoop.sh | <span class="built_in">iex</span> <span class="comment"># 安裝 scoop</span></span><br><span class="line">scoop install avr<span class="literal">-gcc</span> <span class="comment"># 安裝 avr-gcc</span></span><br><span class="line">scoop install avrdude <span class="comment"># avr 燒錄工具</span></span><br></pre></td></tr></table></figure>
+
+<p>接下來要用cargo安裝整合工具:</p>
+<p>用可以跑 cargo 的終端就行:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cargo +stable install ravedude</span><br><span class="line">cargo install cargo-generate</span><br></pre></td></tr></table></figure>
+
+<h2 id="寫一個簡單程式"><a href="#寫一個簡單程式" class="headerlink" title="寫一個簡單程式"></a>寫一個簡單程式</h2><p>要先產生一個專案:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo generate --git https://github.com/Rahix/avr-hal-template.git</span><br></pre></td></tr></table></figure>
+
+<p>過程讓你輸入專案名稱和目標開發版</p>
+<p>完成後用你習慣的編輯器打開資料夾就行</p>
+<p>接下來安裝lcd的library</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先確定你是在專案資料夾下</span></span><br><span class="line">cargo add hd44780-driver</span><br></pre></td></tr></table></figure>
+
+<p>然後就可以愉快寫程式拉</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/main.rs</span></span><br><span class="line"><span class="meta">#![no_std]</span></span><br><span class="line"><span class="meta">#![no_main]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> hd44780_driver::&#123;HD44780, Cursor, CursorBlink&#125;;</span><br><span class="line"><span class="keyword">use</span> panic_halt <span class="keyword">as</span> _;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[arduino_hal::entry]</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() <span class="punctuation">-&gt;</span> ! &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">dp</span> = arduino_hal::Peripherals::<span class="title function_ invoke__">take</span>().<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">pins</span> = arduino_hal::pins!(dp);</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">delay</span> = arduino_hal::Delay::<span class="title function_ invoke__">new</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">led</span> = pins.d13.<span class="title function_ invoke__">into_output</span>();</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">rs</span> = pins.d12.<span class="title function_ invoke__">into_output</span>();</span><br><span class="line">    <span class="comment">// 沒用到, 但你不宣告他不會動</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">rw</span> = pins.d11.<span class="title function_ invoke__">into_output</span>();</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">en</span> = pins.d10.<span class="title function_ invoke__">into_output</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">d4</span> = pins.d5.<span class="title function_ invoke__">into_output</span>();</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">d5</span> = pins.d4.<span class="title function_ invoke__">into_output</span>();</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">d6</span> = pins.d3.<span class="title function_ invoke__">into_output</span>();</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">d7</span> = pins.d2.<span class="title function_ invoke__">into_output</span>();</span><br><span class="line">    <span class="comment">// 定義輸出腳位</span></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">lcd</span> = HD44780::<span class="title function_ invoke__">new_4bit</span>(rs, en, d4, d5, d6, d7, &amp;<span class="keyword">mut</span> delay).<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化</span></span><br><span class="line">    lcd.<span class="title function_ invoke__">reset</span>(&amp;<span class="keyword">mut</span> delay);</span><br><span class="line">    lcd.<span class="title function_ invoke__">clear</span>(&amp;<span class="keyword">mut</span> delay);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 不要游標</span></span><br><span class="line">    lcd.<span class="title function_ invoke__">set_cursor_visibility</span>(Cursor::Invisible, &amp;<span class="keyword">mut</span> delay);</span><br><span class="line">    <span class="comment">// 不要閃爍</span></span><br><span class="line">    lcd.<span class="title function_ invoke__">set_cursor_blink</span>(CursorBlink::Off, &amp;<span class="keyword">mut</span> delay);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 輸出</span></span><br><span class="line">    lcd.<span class="title function_ invoke__">write_str</span>(<span class="string">&quot;Hello World!&quot;</span>, &amp;<span class="keyword">mut</span> delay);</span><br><span class="line">    <span class="comment">// 定位到第二行</span></span><br><span class="line">    lcd.<span class="title function_ invoke__">set_cursor_pos</span>(<span class="number">40</span>, &amp;<span class="keyword">mut</span> delay);</span><br><span class="line">    lcd.<span class="title function_ invoke__">write_str</span>(<span class="string">&quot;greeting from rust&quot;</span>, &amp;<span class="keyword">mut</span> delay);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">loop</span> &#123;</span><br><span class="line">        led.<span class="title function_ invoke__">toggle</span>();</span><br><span class="line">        arduino_hal::<span class="title function_ invoke__">delay_ms</span>(<span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>執行程式也很簡單:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># arduino on COM3</span></span><br><span class="line">RAVEDUDE_PORT=COM3 cargo run</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2023/10/uno-lcd.png"></p>
+<p>embedded-hal 十分強大，基於該抽象層的功能都能輕易移植到有實作的平台</p>
+<p>下次來玩玩看一起被翻出來的8266好了…</p>
+<h2 id="參考"><a href="#參考" class="headerlink" title="參考:"></a>參考:</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/Rahix/avr-hal">https://github.com/Rahix/avr-hal</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/johndoneth/hd44780-driver">https://github.com/johndoneth/hd44780-driver</a></li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
   <article id="post-smokeping-with-docker" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   
   <div class="post-content">
@@ -539,71 +654,6 @@
 
 
 
-  <article id="post-windows-sandbox-config" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time class="dt-published" datetime="2019-05-25T04:45:53.000Z"><a href="/2019/05/25/windows-sandbox-config/">2019-05-25</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2019/05/25/windows-sandbox-config/">windows 10 沙盒 正式上線 自定義配置檔 自己寫</a></h1>
-  
-
-    </header>
-    <div class="e-content entry" itemprop="articleBody">
-      
-        <p>這星期1903上線拉，最讓我期待的是windows 10終於有內建的沙盒程式啦。</p>
-<p>啟用方法很簡單，先確認自己更新到1903，然後去舊版控制台，程式集裡的「開啟或關閉Windows功能」把「Windows 沙箱」選項打勾然後確定完重新開機，然後你就可以在你的開始列表中找到「Windows Sandbox」。<br>點下去就有一個隨開即用的沙盒模式，直接關掉裡面發生的事情就當沒有發生過，重開又是一個乾淨的新系統。</p>
-<p>以上就是沙盒的介紹，那Windows 沙盒也提供自定義配置檔案來對沙盒做部分修改，比如說讓沙盒存取外部檔案之類的。</p>
-<p>首先先建立一個空檔案吧副檔名叫 <strong>.wsb</strong></p>
-<p>然後用記事本或其他文字編輯器打開它<br>輸入以下的文字</p>
-<p> <configuration> 設定放這 </configuration></p>
-<p>所以這是一個xml格式的設定檔<br>所以可以在 <code>configuration</code> 的區段下寫配置<br>目前我查到支援的配置有</p>
-<p><strong>虛擬GPU(VGU)</strong>  </p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">vgpu</span>&gt;</span>參數<span class="tag">&lt;/<span class="name">vgpu</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>有 <code>Disable</code> 和 <code>Default</code> 兩個參數  </p>
-<p><strong>網路功能</strong>(Networking)  </p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">networking</span>&gt;</span>參數<span class="tag">&lt;/<span class="name">networking</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>有 <code>Disable</code> 和 <code>Default</code> 兩個參數  </p>
-<p><strong>資料夾映射</strong>(MappedFolders)  </p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mappedFolders</span>&gt;</span> 子項目 <span class="tag">&lt;/<span class="name">mappedFolders</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>這裡面有子項目，參見下一節說明  </p>
-<p><strong>資料夾映射子項</strong>  </p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mappedFolder</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">hostFolder</span>&gt;</span>外部主機路徑<span class="tag">&lt;/<span class="name">hostFolder</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">readOnly</span>&gt;</span>參數<span class="tag">&lt;/<span class="name">readOnly</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;/<span class="name">mappedFolder</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><code>HostFolder</code> 參數：外部主機資料夾路徑，例如：<code>C:\Users\Public\Downloads</code><br><code>ReadOnly</code>     參數：是否為唯讀模式，接受 <code>true</code> 或 <code>false</code><br>備註:目前所有的映射都是指向桌面，希望未來可以有指向其他地方的設定  </p>
-<p><strong>登入時執行</strong>(LogonCommand)  </p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">logonCommand</span>&gt;</span> <span class="tag">&lt;<span class="name">command</span>&gt;</span>執行的指令<span class="tag">&lt;/<span class="name">command</span>&gt;</span> <span class="tag">&lt;/<span class="name">logonCommand</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><code>Command</code> 參數：指令，程式或某個批次檔，例如要打開C:\的話：<code>explorer.exe C:\</code>  </p>
-<p>所以比如說我想把我的下載資料夾映射到沙盒中<br>設定檔就會長這樣<br>config.wsb</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="name">mappedFolders</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">mappedFolder</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">hostFolder</span>&gt;</span>E:\\Downloads<span class="tag">&lt;/<span class="name">hostFolder</span>&gt;</span> </span><br><span class="line">        <span class="tag">&lt;<span class="name">readOnly</span>&gt;</span>true<span class="tag">&lt;/<span class="name">readOnly</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;/<span class="name">mappedFolder</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;/<span class="name">mappedFolders</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>最後直接點開你寫好的檔案，你就得到一個桌面上有一個映射資料夾的臨時windows環境了  </p>
-<p>這就是全部拉，需要參考的可以去下面參考連結找，有提供兩組範例<br>上一次寫文章都隔了423天，真的好久，預名都續費1次了…</p>
-<p>參考資料：微軟技術社群 <a target="_blank" rel="noopener" href="https://bit.ly/2UmI3N7">https://techcommunity.microsoft.com/t5/Windows-Kernel-Internals/Windows-Sandbox-Config-Files/ba-p/354902</a></p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -629,6 +679,8 @@
     <li><a href="/categories/linux/">linux</a><small>1</small></li>
   
     <li><a href="/categories/linux/monitoring/">monitoring</a><small>1</small></li>
+  
+    <li><a href="/categories/rust/">rust</a><small>1</small></li>
   
     <li><a href="/categories/%E5%85%B6%E4%BB%96/">其他</a><small>3</small></li>
   
@@ -685,11 +737,15 @@
   
     <li><a href="/tags/docker/">docker</a><small>1</small></li>
   
+    <li><a href="/tags/hd44780/">hd44780</a><small>1</small></li>
+  
     <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
   
     <li><a href="/tags/kernel/">kernel</a><small>1</small></li>
   
     <li><a href="/tags/laravel/">laravel</a><small>1</small></li>
+  
+    <li><a href="/tags/lcd/">lcd</a><small>1</small></li>
   
     <li><a href="/tags/linux/">linux</a><small>2</small></li>
   
@@ -702,6 +758,8 @@
     <li><a href="/tags/root/">root</a><small>1</small></li>
   
     <li><a href="/tags/rootfs/">rootfs</a><small>1</small></li>
+  
+    <li><a href="/tags/rust/">rust</a><small>1</small></li>
   
     <li><a href="/tags/sandbox/">sandbox</a><small>1</small></li>
   
@@ -752,6 +810,18 @@
 <script src="/js/gallery.js"></script>
 
 
+
+<script>
+var disqus_shortname = 'dtitw';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
 
 
 
