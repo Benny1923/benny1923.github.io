@@ -49,6 +49,50 @@
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper">
+  <article id="post-maintainlog1" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2019-09-15T11:05:21.000Z"><a href="/2019/09/15/maintainlog1/">2019-09-15</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2019/09/15/maintainlog1/">網站維護日誌+CF的worker妙用</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>好久沒有寫blog了，上一次是多久前阿…</p>
+<p>有看過關於本站頁的都知道(沒看過?右上角連結點一下)<br>我的網站是架在一台rpi 2上的<br>到今天依然是它在服務著我以及各位<br>自從網站架成後，四年過去了，之前對他不聞也不問，直到昨天心血來潮<br>「要不我把它重灌?」<br>的確，隨著新版本的php7出現，而我還在用php5，在安全及速度上都說不過去<br>雖然平常會apt update &amp;&amp; apt upgrade -y<br>但升級php7這件事，我真的不想去動它，沒為甚麼，單純我懶<br>要改config有的沒的(藉口，到處都是藉口)</p>
+<p>終於我在昨天下定決心把rpi 2的系統全部重裝，終於可以升級php7啦<br>先解決維護頁面問題，原本我是打算把文章全快取成靜態頁，這樣就不會影響維護時的流量<br>but 這實在是太麻煩了，還有我網站根本沒有流量(36篇文章真的沒什麼流量)，所以用一段文字來顯示維護中就好<br>然後我需要一個靜態頁伺服器放顯示維護中的html<br>等等…我的pi等等要下線，那誰來負責這件事?<br>CF有一個叫 Workers 的功能(要開加速)，你可以設定條件網址去觸發worker，worker 執行用javascript編寫的功能</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">addEventListener</span>(<span class="string">&#x27;fetch&#x27;</span>, <span class="function"><span class="params">event</span> =&gt;</span> &#123;</span><br><span class="line">  event.<span class="title function_">respondWith</span>(<span class="title function_">handleRequest</span>(event.<span class="property">request</span>))</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">/\*\*</span><br><span class="line"> \* <span class="title class_">Fetch</span> and log a request</span><br><span class="line"> \* @param &#123;<span class="title class_">Request</span>&#125; request</span><br><span class="line"> \*/</span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">handleRequest</span>(<span class="params">request</span>) &#123;</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> modifiedHeaders = <span class="keyword">new</span> <span class="title class_">Headers</span>()</span><br><span class="line"> </span><br><span class="line">  modifiedHeaders.<span class="title function_">set</span>(<span class="string">&#x27;Content-Type&#x27;</span>, <span class="string">&#x27;text/html; charset=utf-8&#x27;</span>)</span><br><span class="line">  modifiedHeaders.<span class="title function_">append</span>(<span class="string">&#x27;Pragma&#x27;</span>, <span class="string">&#x27;no-cache&#x27;</span>)</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">  <span class="comment">//Return maint page if you&#x27;re not calling from a trusted IP</span></span><br><span class="line">  <span class="keyword">if</span> (request.<span class="property">headers</span>.<span class="title function_">get</span>(<span class="string">&quot;cf-connecting-ip&quot;</span>) !== <span class="string">&quot;123.123.123.123&quot;</span>) </span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// Return modified response.</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Response</span>(maintPage, &#123;</span><br><span class="line">      <span class="attr">headers</span>: modifiedHeaders</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span> <span class="comment">//Allow users from trusted into site</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">//Fire all other requests directly to our WebServers</span></span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">fetch</span>(request)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> maintPage = <span class="string">&quot;網站維護中...&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>上面這段程式會把所有請求攔截下來，傳回”網站維護中…”的文字，除非你的ip是123.123.123.123，那你可以正常瀏覽網站</p>
+<p>再來是備份和重灌<br>先把wordpress的文章和圖片導出，以防萬一，sqldump也跑個<br>確定東西備份好，關機，拔SD卡<br>我看著rpi 2想：「這東西竟然能連續通電4年?」<br>然後就是重寫映像，放進去開機，然後ssh連上去<br>在這邊奉勸各位系統剛灌好，第一件事就是:</p>
+<p>改密碼!!</p>
+<p>全世界都知道raspbian的預設帳密是 pi &#x2F; raspberry<br>以前有個朋友我剛幫他裝完系統，離開前有提醒要改密碼，隔天就被駭去挖礦了<br>我實在是不知道該對他說什麼好，只好再幫他重裝一次(工具人貼紙+1)</p>
+<p>然後 nginx php7-fpm mariadb(mysql) 裝好<br>“簡單”設定一下， wordpress 下載回來<br>把setup流程跑完，文章導回來，大功告成囉!<br>另外我也換了個佈景主題，希望各位喜歡</p>
+<p>最後<br>新版的編輯器好不習慣啊，天啊我不在這段時間wordpress都改了些什麼<br>更新完後使用舊編輯器的文章語法高亮有問題，我會盡快修正<br>但對那些不能修復的呢，咳咳，我也不知道怎麼辦</p>
+<p>參考資料: <a target="_blank" rel="noopener" href="https://medium.com/clouddevops/cloudflare-no-maintenance-mode-still-a-maintainace-mode-d0d088d414c1">https://medium.com/clouddevops/cloudflare-no-maintenance-mode-still-a-maintainace-mode-d0d088d414c1</a></p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
   <article id="post-windows-sandbox-config" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   
   <div class="post-content">
@@ -498,6 +542,8 @@
   
     <li><a href="/categories/Windows/">Windows</a><small>3</small></li>
   
+    <li><a href="/categories/docker/">docker</a><small>1</small></li>
+  
     <li><a href="/categories/linux/">linux</a><small>1</small></li>
   
     <li><a href="/categories/linux/monitoring/">monitoring</a><small>1</small></li>
@@ -557,7 +603,9 @@
   
     <li><a href="/tags/blog/">blog</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>1</small></li>
+    <li><a href="/tags/cgroup/">cgroup</a><small>1</small></li>
+  
+    <li><a href="/tags/docker/">docker</a><small>2</small></li>
   
     <li><a href="/tags/hd44780/">hd44780</a><small>1</small></li>
   
@@ -586,6 +634,8 @@
     <li><a href="/tags/sandbox/">sandbox</a><small>1</small></li>
   
     <li><a href="/tags/smokeping/">smokeping</a><small>1</small></li>
+  
+    <li><a href="/tags/systemd/">systemd</a><small>1</small></li>
   
     <li><a href="/tags/vagrant/">vagrant</a><small>1</small></li>
   
@@ -617,7 +667,7 @@
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2013-2023 Benny Ling
+  &copy; 2013-2025 Benny Ling
   
   Powered by Hexo. Licensed under CC BY-NC-SA 3.0
 </div>

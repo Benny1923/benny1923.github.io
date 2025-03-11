@@ -49,6 +49,67 @@
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper">
+  <article id="post-docker-cgroup-parent" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2025-03-11T15:13:27.000Z"><a href="/2025/03/11/docker-cgroup-parent/">2025-03-11</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2025/03/11/docker-cgroup-parent/">用 systemd slice 限制 docker 使用的資源上限</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>最近伺服器開的docker服務是越來越多了</p>
+<p>我的tinker board 2s小板子資源開始越來越不穩定, 經常資源耗盡後重新開機</p>
+<p>docker嘛, 容器技術, <code>--memory</code>, <code>--cpu</code> 參數甚麼的多少也是了解一點的</p>
+<p>可是這只能對單一容器限制, 其他容器是不知道自己以外的容器用了多少資源, 這就會導致當你開&#x2F;關一個新服務時需要調整舊服務的配額, 服務一多後可不好管</p>
+<p>加上要保證沒有資源超額分配情況, 還會導致所有容器只能用平均的方式分配資源, 當某個服務高負載時, 不能挪用其他有空閒的服務的資源</p>
+<p>那有沒有甚麼方法可以讓所有容器共用一個資源限制的規則呢?</p>
+<p>有的</p>
+<p>docker engine 有個設定<code>cgroup-parent</code>, 可以讓所有容器在同一control group下, 這樣可以免去替每個容器設定資源限制, 又避免掉單一容器高負載時無法使用更多資源</p>
+<p>當然, 我們不可能在每次重新開機後手動設定control group, 所以搭配systemd slice自動設定cgroup</p>
+<p>新增檔案 <code>/etc/systemd/system/docker_limit.slice</code> 並編輯:</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Unit]</span></span><br><span class="line"><span class="attr">Description</span>=Slice that limits docker resources</span><br><span class="line"><span class="attr">Before</span>=slices.target</span><br><span class="line"></span><br><span class="line"><span class="section">[Slice]</span></span><br><span class="line"><span class="comment"># 計算cpu用量</span></span><br><span class="line"><span class="attr">CPUAccounting</span>=<span class="literal">true</span></span><br><span class="line"><span class="comment"># 限制cpu用量 100% 為 1 cpu</span></span><br><span class="line"><span class="attr">CPUQuota</span>=<span class="number">500</span>%</span><br><span class="line"><span class="comment"># 計算記憶體用量</span></span><br><span class="line"><span class="attr">MemoryAccounting</span>=<span class="literal">true</span> </span><br><span class="line"><span class="comment"># 限制記憶體用量 1.75GB, 這裡不允許浮點數</span></span><br><span class="line"><span class="attr">MemoryMax</span>=<span class="number">1792</span>M</span><br></pre></td></tr></table></figure>
+
+<p>編輯<code>/etc/docker/daemon.json</code></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;cgroup-parent&quot;</span><span class="punctuation">:</span> <span class="string">&quot;docker_limit.slice&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>輸入指令, 用root操作或前面加上<code>sudo</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl restart docker</span><br></pre></td></tr></table></figure>
+
+<p>收工</p>
+<p>如果想追蹤用量, 除了用<code>docker stats</code>外, 你還可以用</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemd-cgtop docker_limit.slice</span><br></pre></td></tr></table></figure>
+
+<p>缺點就是不知道那個服務就是了…</p>
+<h2 id="後記"><a href="#後記" class="headerlink" title="後記"></a>後記</h2><p>設定完後那個會把server搞掛的服務就不作怪了&#x3D; &#x3D;, 感覺就像某遊戲開工作管理員後反而變順的樣子</p>
+<h2 id="參考"><a href="#參考" class="headerlink" title="參考:"></a>參考:</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://unix.stackexchange.com/questions/537645/how-to-limit-docker-total-resources">https://unix.stackexchange.com/questions/537645/how-to-limit-docker-total-resources</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.docker.com/reference/cli/dockerd/#default-cgroup-parent">https://docs.docker.com/reference/cli/dockerd/#default-cgroup-parent</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.freedesktop.org/software/systemd/man/latest/systemd.resource-control.html#">https://www.freedesktop.org/software/systemd/man/latest/systemd.resource-control.html#</a></li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
   <article id="post-arduino-with-rust" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   
   <div class="post-content">
@@ -342,6 +403,7 @@
 </ul>
 <p>目前是先用第一版的kernel進系統後用安裝自己編譯的ubuntu kernel替代，原本的當作備用開機替代</p>
 <h2 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h2><p>我再也再也不要使用社群小的板子了…</p>
+<p># 2025-03-11 更新: 官方的debian kernel 已經到 5.10.198 可以不用自己找自己麻煩了, 開心~</p>
 
       
     </div>
@@ -610,50 +672,6 @@
 
 
 
-  <article id="post-maintainlog1" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time class="dt-published" datetime="2019-09-15T11:05:21.000Z"><a href="/2019/09/15/maintainlog1/">2019-09-15</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2019/09/15/maintainlog1/">網站維護日誌+CF的worker妙用</a></h1>
-  
-
-    </header>
-    <div class="e-content entry" itemprop="articleBody">
-      
-        <p>好久沒有寫blog了，上一次是多久前阿…</p>
-<p>有看過關於本站頁的都知道(沒看過?右上角連結點一下)<br>我的網站是架在一台rpi 2上的<br>到今天依然是它在服務著我以及各位<br>自從網站架成後，四年過去了，之前對他不聞也不問，直到昨天心血來潮<br>「要不我把它重灌?」<br>的確，隨著新版本的php7出現，而我還在用php5，在安全及速度上都說不過去<br>雖然平常會apt update &amp;&amp; apt upgrade -y<br>但升級php7這件事，我真的不想去動它，沒為甚麼，單純我懶<br>要改config有的沒的(藉口，到處都是藉口)</p>
-<p>終於我在昨天下定決心把rpi 2的系統全部重裝，終於可以升級php7啦<br>先解決維護頁面問題，原本我是打算把文章全快取成靜態頁，這樣就不會影響維護時的流量<br>but 這實在是太麻煩了，還有我網站根本沒有流量(36篇文章真的沒什麼流量)，所以用一段文字來顯示維護中就好<br>然後我需要一個靜態頁伺服器放顯示維護中的html<br>等等…我的pi等等要下線，那誰來負責這件事?<br>CF有一個叫 Workers 的功能(要開加速)，你可以設定條件網址去觸發worker，worker 執行用javascript編寫的功能</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">addEventListener</span>(<span class="string">&#x27;fetch&#x27;</span>, <span class="function"><span class="params">event</span> =&gt;</span> &#123;</span><br><span class="line">  event.<span class="title function_">respondWith</span>(<span class="title function_">handleRequest</span>(event.<span class="property">request</span>))</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">/\*\*</span><br><span class="line"> \* <span class="title class_">Fetch</span> and log a request</span><br><span class="line"> \* @param &#123;<span class="title class_">Request</span>&#125; request</span><br><span class="line"> \*/</span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">handleRequest</span>(<span class="params">request</span>) &#123;</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">let</span> modifiedHeaders = <span class="keyword">new</span> <span class="title class_">Headers</span>()</span><br><span class="line"> </span><br><span class="line">  modifiedHeaders.<span class="title function_">set</span>(<span class="string">&#x27;Content-Type&#x27;</span>, <span class="string">&#x27;text/html; charset=utf-8&#x27;</span>)</span><br><span class="line">  modifiedHeaders.<span class="title function_">append</span>(<span class="string">&#x27;Pragma&#x27;</span>, <span class="string">&#x27;no-cache&#x27;</span>)</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">  <span class="comment">//Return maint page if you&#x27;re not calling from a trusted IP</span></span><br><span class="line">  <span class="keyword">if</span> (request.<span class="property">headers</span>.<span class="title function_">get</span>(<span class="string">&quot;cf-connecting-ip&quot;</span>) !== <span class="string">&quot;123.123.123.123&quot;</span>) </span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// Return modified response.</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Response</span>(maintPage, &#123;</span><br><span class="line">      <span class="attr">headers</span>: modifiedHeaders</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span> <span class="comment">//Allow users from trusted into site</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">//Fire all other requests directly to our WebServers</span></span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">fetch</span>(request)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> maintPage = <span class="string">&quot;網站維護中...&quot;</span>;</span><br></pre></td></tr></table></figure>
-
-<p>上面這段程式會把所有請求攔截下來，傳回”網站維護中…”的文字，除非你的ip是123.123.123.123，那你可以正常瀏覽網站</p>
-<p>再來是備份和重灌<br>先把wordpress的文章和圖片導出，以防萬一，sqldump也跑個<br>確定東西備份好，關機，拔SD卡<br>我看著rpi 2想：「這東西竟然能連續通電4年?」<br>然後就是重寫映像，放進去開機，然後ssh連上去<br>在這邊奉勸各位系統剛灌好，第一件事就是:</p>
-<p>改密碼!!</p>
-<p>全世界都知道raspbian的預設帳密是 pi &#x2F; raspberry<br>以前有個朋友我剛幫他裝完系統，離開前有提醒要改密碼，隔天就被駭去挖礦了<br>我實在是不知道該對他說什麼好，只好再幫他重裝一次(工具人貼紙+1)</p>
-<p>然後 nginx php7-fpm mariadb(mysql) 裝好<br>“簡單”設定一下， wordpress 下載回來<br>把setup流程跑完，文章導回來，大功告成囉!<br>另外我也換了個佈景主題，希望各位喜歡</p>
-<p>最後<br>新版的編輯器好不習慣啊，天啊我不在這段時間wordpress都改了些什麼<br>更新完後使用舊編輯器的文章語法高亮有問題，我會盡快修正<br>但對那些不能修復的呢，咳咳，我也不知道怎麼辦</p>
-<p>參考資料: <a target="_blank" rel="noopener" href="https://medium.com/clouddevops/cloudflare-no-maintenance-mode-still-a-maintainace-mode-d0d088d414c1">https://medium.com/clouddevops/cloudflare-no-maintenance-mode-still-a-maintainace-mode-d0d088d414c1</a></p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -675,6 +693,8 @@
     <li><a href="/categories/Ubuntu/">Ubuntu</a><small>3</small></li>
   
     <li><a href="/categories/Windows/">Windows</a><small>3</small></li>
+  
+    <li><a href="/categories/docker/">docker</a><small>1</small></li>
   
     <li><a href="/categories/linux/">linux</a><small>1</small></li>
   
@@ -735,7 +755,9 @@
   
     <li><a href="/tags/blog/">blog</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>1</small></li>
+    <li><a href="/tags/cgroup/">cgroup</a><small>1</small></li>
+  
+    <li><a href="/tags/docker/">docker</a><small>2</small></li>
   
     <li><a href="/tags/hd44780/">hd44780</a><small>1</small></li>
   
@@ -764,6 +786,8 @@
     <li><a href="/tags/sandbox/">sandbox</a><small>1</small></li>
   
     <li><a href="/tags/smokeping/">smokeping</a><small>1</small></li>
+  
+    <li><a href="/tags/systemd/">systemd</a><small>1</small></li>
   
     <li><a href="/tags/vagrant/">vagrant</a><small>1</small></li>
   
@@ -795,7 +819,7 @@
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2013-2023 Benny Ling
+  &copy; 2013-2025 Benny Ling
   
   Powered by Hexo. Licensed under CC BY-NC-SA 3.0
 </div>
