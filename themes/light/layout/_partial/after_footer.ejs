@@ -2,17 +2,40 @@
 <%- js('js/jquery.imagesloaded.min.js') %>
 <%- js('js/gallery.js') %>
 
+<script>
+function switchCommentTab(tab) {
+  var panels = document.querySelectorAll('#comment .comment-panel');
+  panels.forEach(function(p) { p.classList.remove('active'); });
+  var target = document.getElementById(tab);
+  if (target) target.classList.add('active');
+
+  var tabsEl = document.querySelectorAll('#comment .comment-tabs .tab');
+  tabsEl.forEach(function(t) {
+    t.classList.remove('active');
+    if (t.getAttribute('onclick') && t.getAttribute('onclick').indexOf("'" + tab + "'") !== -1) {
+      t.classList.add('active');
+    }
+  });
+
+  if (tab === 'disqus' && typeof loadDisqus === 'function') {
+    loadDisqus();
+  }
+}
+</script>
+
 <% if (config.disqus_shortname){ %>
 <script>
 var disqus_shortname = '<%= config.disqus_shortname %>';
 
-(function(){
-  var dsq = document.createElement('script');
-  dsq.type = 'text/javascript';
-  dsq.async = true;
-  dsq.src = 'https://' + disqus_shortname + '.disqus.com/<% if (page.comments){ %>embed.js<% } else { %>count.js<% } %>';
-  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-}());
+function loadDisqus() {
+  if (document.getElementById('disqus_thread') && !window.DISQUS) {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }
+}
 </script>
 <% } %>
 
@@ -23,5 +46,14 @@ var disqus_shortname = '<%= config.disqus_shortname %>';
 (function($){
   $('.fancybox').fancybox();
 })(jQuery);
+</script>
+<% } %>
+
+<% if (config.disqus_shortname){ %>
+<script>
+// 如果 Disqus 是預設顯示的面板，自動載入
+if (document.getElementById('disqus') && document.getElementById('disqus').classList.contains('active') && typeof loadDisqus === 'function') {
+  loadDisqus();
+}
 </script>
 <% } %>

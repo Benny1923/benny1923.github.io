@@ -6,3 +6,28 @@
   .title
     font-weight normal
     margin-bottom 15px
+
+  .comment-tabs
+    margin-bottom 10px
+    border-bottom 1px solid #eee
+    .tab
+      display inline-block
+      padding 8px 16px
+      margin-right 5px
+      color #666
+      text-decoration none
+      border 1px solid transparent
+      border-bottom none
+      cursor pointer
+      &.active
+        color #333
+        border-color #ddd
+        background #fff
+        font-weight bold
+      &:hover
+        color #333
+
+  .comment-panel
+    display none
+    &.active
+      display block

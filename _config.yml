@@ -3,17 +3,17 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
+title: Benny's Blog
 subtitle: ''
 description: ''
 keywords:
-author: John Doe
-language: en
+author: Benny1923
+language: zh-TW
 timezone: ''
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: http://example.com
+url: https://blog.bennyling.cc
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
@@ -117,7 +117,26 @@ theme_config:
   google_analytics:
   rss:
 
-  comment_provider: disqus
+# Comment systems
+# Giscus 為預設分頁 (default tab)
+# 請至 https://giscus.app 設定並取得以下參數
+
+giscus:
+  repo: 'Benny1923/benny1923.github.io'          # 例如：username/blog
+  repo_id: 'R_kgDOJZuMzw'       # 從 giscus.app 取得
+  category: 'Announcements'
+  category_id: 'DIC_kwDOJZuMz84DKfw2'   # 從 giscus.app 取得
+  mapping: 'pathname'
+  strict: 0
+  reactions_enabled: 1
+  emit_metadata: 0
+  input_position: 'bottom'
+  theme: 'light'
+  lang: 'zh-TW'
+
+# Disqus
+# 請至 https://disqus.com 取得 shortname
+disqus_shortname: 'dtitw'
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
